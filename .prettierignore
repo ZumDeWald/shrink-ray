@@ -1,0 +1,6 @@
+# Prettier ignore HTML and PHP
+*.html
+*.php
+*.md
+
+*.min.css
