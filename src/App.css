@@ -31,12 +31,47 @@ header {
 #drop-zone {
   display: grid;
   justify-content: center;
+  align-content: start;
   align-items: center;
   width: 80vw;
-  min-height: 200px;
-  height: 70%;
+  max-height: 70%;
+  padding: 10px 0;
+  margin: 0;
+  list-style: none;
   background: #000;
   color: #addd;
   border: 2px dashed #addd;
   border-radius: 25px;
+}
+
+#drop-zone > li {
+  width: 100%;
+  height: auto;
+  padding: 8px 12px;
+  margin: 0 auto;
+}
+
+#drop-zone > li:nth-of-type(even) {
+  background: #fff3;
+}
+
+.drop-zone-overlay {
+  border: dashed grey 4px;
+  background-color: rgba(255, 255, 255, 0.8);
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 9999;
+}
+
+.drop-zone-overlay > div {
+  position: absolute;
+  top: 50%;
+  right: 0;
+  left: 0;
+  text-align: center;
+  color: grey;
+  font-size: 36px;
 }

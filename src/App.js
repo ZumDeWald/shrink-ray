@@ -1,4 +1,5 @@
 import React from "react";
+import FileList from "./components/FileList.js";
 import "./App.css";
 
 function App() {
@@ -8,10 +9,15 @@ function App() {
         <h1>Shrink Ray</h1>
       </header>
       <main>
-        <section class="drop-zone-container">
-          <div id="drop-zone" ondrop="handleDrop(e)">
-            <h3>Drop Zone</h3>
-          </div>
+        {
+          // <section className="drop-zone-container">
+          //   <div id="drop-zone" onDrop={() => {}}>
+          //     <h3>Drop Zone</h3>
+          //   </div>
+          // </section>
+        }
+        <section className="drop-zone-container">
+          <FileList />
         </section>
       </main>
     </div>
