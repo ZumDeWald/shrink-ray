@@ -51,8 +51,13 @@ header {
   margin: 0 auto;
 }
 
-#drop-zone > li:nth-of-type(even) {
+#drop-zone > li:last-of-type {
   background: #fff3;
+  border-radius: 5px;
+}
+
+#drop-zone > li.no-bg {
+  background: transparent;
 }
 
 .drop-zone-overlay {
@@ -68,10 +73,23 @@ header {
 
 .drop-zone-overlay > div {
   position: absolute;
-  top: 50%;
+  top: 10%;
   right: 0;
   left: 0;
   text-align: center;
   color: grey;
-  font-size: 36px;
+  font-size: 2rem;
+}
+
+.output-image-container {
+  width: 100%;
+  margin: 10px 0 50px 0;
+  display: grid;
+  justify-content: center;
+  align-content: center;
+}
+
+#output-image {
+  padding: 0;
+  margin: 10px 0;
 }

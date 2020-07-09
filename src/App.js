@@ -19,11 +19,13 @@ function App() {
         <section className="drop-zone-container">
           <FileList />
         </section>
-        <img
-          id="test-image"
-          src="https://images.unsplash.com/photo-1593935532255-a0574cc8fbf1?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=789&q=80"
-          alt="Trying it"
-        />
+        <section class="output-image-container">
+          <img
+            id="output-image"
+            src="https://images.unsplash.com/photo-1593935532255-a0574cc8fbf1?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=789&q=80"
+            alt="Trying it"
+          />
+        </section>
       </main>
     </div>
   );

@@ -5,15 +5,7 @@ import { execute, buildInputFile, loadImageElement } from "wasm-imagemagick";
 const FileList = ({ props }) => {
   const [formats, setFormats] = useState(["jpg", "jpeg", "png"]);
 
-  const [files, setFiles] = useState([
-    "nice.png",
-    "veryCool.jpg",
-    "thatPic.png",
-    "thisPic.jpeg",
-    "theOtherPic.jpg",
-    "allTheCats.jpg",
-    "catsWithBats.jpeg",
-  ]);
+  const [files, setFiles] = useState([]);
 
   async function magick(file) {
     const { outputFiles, exitCode, stderr } = await execute({
@@ -21,8 +13,8 @@ const FileList = ({ props }) => {
         await buildInputFile(URL.createObjectURL(file), "image1.png"),
       ],
       commands: `
-        convert image1.png -bordercolor #ffee44 -background #eeff55 +polaroid image2.png
-        convert image2.png -fill #997711 -tint 55 image3.jpg
+        convert image1.png -resize '500' image2.png
+        convert image2.png -quality '70' image3.jpg
       `,
     });
     if (exitCode) {
@@ -30,7 +22,7 @@ const FileList = ({ props }) => {
     } else {
       await loadImageElement(
         outputFiles.find(f => f.name === "image3.jpg"),
-        document.getElementById("test-image")
+        document.getElementById("output-image")
       );
     }
   }
@@ -63,8 +55,6 @@ const FileList = ({ props }) => {
       fileList.push(newFiles[i].name);
     }
 
-    console.log(fileList);
-
     setFiles(files => files.concat(fileList));
 
     //Display first image
@@ -78,11 +68,17 @@ const FileList = ({ props }) => {
 
   return (
     <DragAndDrop handleDropProp={handleDropProp}>
-      <ul id="drop-zone">
-        {files.map((file, i) => (
-          <li key={`file ${i}`}>{file}</li>
-        ))}
-      </ul>
+      {files.length > 0 ? (
+        <ul id="drop-zone">
+          {files.map((file, i) => (
+            <li key={`file ${i}`}>{file}</li>
+          ))}
+        </ul>
+      ) : (
+        <ul id="drop-zone">
+          <li class="no-bg">The Drop Zone</li>
+        </ul>
+      )}
     </DragAndDrop>
   );
 };
