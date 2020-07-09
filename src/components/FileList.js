@@ -37,7 +37,7 @@ const FileList = ({ props }) => {
 
   const handleDropProp = passedFiles => {
     //Existing file list
-    let fileList = JSON.parse(JSON.stringify(files));
+    let fileList = [];
 
     //Change passedFiles into array
     let newFiles = [...passedFiles];
@@ -63,7 +63,9 @@ const FileList = ({ props }) => {
       fileList.push(newFiles[i].name);
     }
 
-    setFiles(fileList);
+    console.log(fileList);
+
+    setFiles(files => files.concat(fileList));
 
     //Display first image
     // if (!!newFiles.length) {
