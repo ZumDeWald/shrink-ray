@@ -1,8 +1,14 @@
 import React, { useState } from "react";
 import DragAndDrop from "./DragAndDrop.js";
-import { execute, buildInputFile, loadImageElement } from "wasm-imagemagick";
+import {
+  execute,
+  buildInputFile,
+  loadImageElement,
+  asOutputFile,
+} from "wasm-imagemagick";
+import JSZip from "jszip";
 
-const FileList = ({ props }) => {
+const FileList = ({ setImageProcessed }) => {
   const [formats, setFormats] = useState(["jpg", "jpeg", "png"]);
 
   const [files, setFiles] = useState([]);
@@ -13,17 +19,35 @@ const FileList = ({ props }) => {
         await buildInputFile(URL.createObjectURL(file), "image1.png"),
       ],
       commands: `
-        convert image1.png -resize '500' image2.png
-        convert image2.png -quality '70' image3.jpg
+        convert image1.png -resize '1000' image2.png
+        convert image2.png -quality '70' final.jpg
       `,
     });
     if (exitCode) {
       alert(`There was an error with the command: ${stderr.join("\n")}`);
     } else {
       await loadImageElement(
-        outputFiles.find(f => f.name === "image3.jpg"),
+        outputFiles.find(f => f.name === "final.jpg"),
         document.getElementById("output-image")
       );
+
+      setImageProcessed(true);
+
+      let downloadLink = document.getElementById("download-link");
+
+      let zip = new JSZip();
+
+      let zipFolder = zip.folder("processed");
+
+      zipFolder.file(
+        `${file.name}_out.jpg`,
+        outputFiles.find(f => f.name === "final.jpg").blob
+      );
+
+      zip.generateAsync({ type: "blob" }).then(blob => {
+        let imageBlobURL = URL.createObjectURL(blob);
+        downloadLink.href = imageBlobURL;
+      });
     }
   }
 
@@ -76,7 +100,7 @@ const FileList = ({ props }) => {
         </ul>
       ) : (
         <ul id="drop-zone">
-          <li class="no-bg">The Drop Zone</li>
+          <li className="no-bg">The Drop Zone</li>
         </ul>
       )}
     </DragAndDrop>

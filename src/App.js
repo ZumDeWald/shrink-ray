@@ -1,8 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import FileList from "./components/FileList.js";
 import "./App.css";
 
 function App() {
+  const [imageProcessed, setImageProcessed] = useState(null);
+
   return (
     <div className="App">
       <header>
@@ -17,14 +19,23 @@ function App() {
           // </section>
         }
         <section className="drop-zone-container">
-          <FileList />
+          <FileList setImageProcessed={setImageProcessed} />
         </section>
-        <section class="output-image-container">
+        <section className="output-image-container">
           <img
             id="output-image"
             src="https://images.unsplash.com/photo-1593935532255-a0574cc8fbf1?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=789&q=80"
             alt="Trying it"
           />
+          {!!imageProcessed && (
+            <div>
+              <a id="download-link" href="/" download="result.zip">
+                <button className="download-button">
+                  Download finished image
+                </button>
+              </a>
+            </div>
+          )}
         </section>
       </main>
     </div>
