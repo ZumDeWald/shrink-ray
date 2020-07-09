@@ -25,7 +25,7 @@ header {
   justify-content: center;
   align-items: center;
   width: 100vw;
-  min-height: 300px;
+  min-height: 150px;
 }
 
 #drop-zone {
@@ -56,8 +56,16 @@ header {
   border-radius: 5px;
 }
 
+#drop-zone > li:last-of-type::after {
+  content: " (available below ↓)";
+}
+
 #drop-zone > li.no-bg {
   background: transparent;
+}
+
+#drop-zone > li.no-bg::after {
+  content: "";
 }
 
 .drop-zone-overlay {
@@ -83,7 +91,7 @@ header {
 
 .output-image-container {
   width: 100%;
-  margin: 10px 0 50px 0;
+  margin-bottom: 50px;
   display: grid;
   justify-content: center;
   align-content: center;
@@ -93,4 +101,8 @@ header {
   max-width: 500px;
   padding: 0;
   margin: 10px 0;
+}
+
+.ghost {
+  display: none;
 }
