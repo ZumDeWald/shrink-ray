@@ -30,9 +30,7 @@ function App() {
           {!!imageProcessed && (
             <div>
               <a id="download-link" href="/" download="result.zip">
-                <button className="download-button">
-                  Download finished image
-                </button>
+                <button className="download-button">Download Results</button>
               </a>
             </div>
           )}

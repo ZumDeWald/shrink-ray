@@ -18,16 +18,20 @@ const FileList = ({ setImageProcessed }) => {
       inputFiles: [
         await buildInputFile(URL.createObjectURL(file), "image1.png"),
       ],
-      commands: `
-        convert image1.png -resize '1000' image2.png
-        convert image2.png -quality '70' final.jpg
-      `,
+      commands: [
+        `
+          convert image1.png -resize '1000' image2.png
+          convert image2.png -quality '70' final_v1.jpg
+          convert image1.png -resize '500' image3.png
+          convert image3.png -quality '45' final_v2.jpg
+        `,
+      ],
     });
     if (exitCode) {
       alert(`There was an error with the command: ${stderr.join("\n")}`);
     } else {
       await loadImageElement(
-        outputFiles.find(f => f.name === "final.jpg"),
+        outputFiles.find(f => f.name === "final_v1.jpg"),
         document.getElementById("output-image")
       );
 
@@ -40,8 +44,13 @@ const FileList = ({ setImageProcessed }) => {
       let zipFolder = zip.folder("processed");
 
       zipFolder.file(
-        `${file.name}_out.jpg`,
-        outputFiles.find(f => f.name === "final.jpg").blob
+        `${file.name}_v1.jpg`,
+        outputFiles.find(f => f.name === "final_v1.jpg").blob
+      );
+
+      zipFolder.file(
+        `${file.name}_v2.jpg`,
+        outputFiles.find(f => f.name === "final_v2.jpg").blob
       );
 
       zip.generateAsync({ type: "blob" }).then(blob => {

@@ -90,6 +90,7 @@ header {
 }
 
 #output-image {
+  max-width: 500px;
   padding: 0;
   margin: 10px 0;
 }
