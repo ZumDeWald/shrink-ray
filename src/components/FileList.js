@@ -8,7 +8,7 @@ const FileList = ({ setImageProcessed }) => {
 
   const [files, setFiles] = useState([]);
 
-  //switch to help set original file type to output file
+  //switch statement to preserve original file type for output file
   const checkFileType = typeToCheck => {
     switch (typeToCheck) {
       case "image/png":
@@ -18,12 +18,13 @@ const FileList = ({ setImageProcessed }) => {
       case "image.jpeg":
         return "jpeg";
       default:
-        return;
+        return "jpg";
     }
   };
 
   //ImageMagick
   async function magick(file) {
+    //Find and save original file type for output file
     let fileType = checkFileType(file.type);
 
     const { outputFiles, exitCode, stderr } = await execute({
