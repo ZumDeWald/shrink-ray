@@ -1,15 +1,10 @@
 import React, { useState } from "react";
 import DragAndDrop from "./DragAndDrop.js";
-import {
-  execute,
-  buildInputFile,
-  loadImageElement,
-  asOutputFile,
-} from "wasm-imagemagick";
+import { execute, buildInputFile, loadImageElement } from "wasm-imagemagick";
 import JSZip from "jszip";
 
 const FileList = ({ setImageProcessed }) => {
-  const [formats, setFormats] = useState(["jpg", "jpeg", "png"]);
+  const [formats] = useState(["jpg", "jpeg", "png"]);
 
   const [files, setFiles] = useState([]);
 

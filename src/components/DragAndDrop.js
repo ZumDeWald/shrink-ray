@@ -44,7 +44,7 @@ const DragAndDrop = props => {
     div.addEventListener("dragleave", handleDragOut);
     div.addEventListener("dragover", handleDrag);
     div.addEventListener("drop", handleDrop);
-  }, [dropRef]);
+  });
 
   return (
     <div
