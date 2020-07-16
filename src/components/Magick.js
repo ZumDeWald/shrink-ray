@@ -18,15 +18,15 @@ const checkFileType = typeToCheck => {
 };
 
 //ImageMagick
-async function Magick(file) {
+async function Magick(file, commandOptionParams) {
   checkFileType(file.type);
 
-  commandOptions = `
-    convert image1.png -resize '1000' image2.png
-    convert image2.png -quality '70' final_v1.${fileType}
-    convert image1.png -resize '500' image3.png
-    convert image3.png -quality '45' final_v2.${fileType}
-  `;
+  commandOptionParams.forEach((param, i) => {
+    commandOptions += `
+    convert image1.png -resize ${param.size} image${i}_mod1.png
+    convert image${i}_mod1.png -quality ${param.quality} final_v${i}.${fileType}
+    `;
+  });
 
   const { outputFiles, exitCode, stderr } = await execute({
     inputFiles: [await buildInputFile(URL.createObjectURL(file), "image1.png")],

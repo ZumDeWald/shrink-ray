@@ -7,6 +7,10 @@ const FileList = ({ startTheMagick, setFilesDropped }) => {
   const [formats] = useState(["jpg", "jpeg", "png"]);
   const [droppedFiles, setDroppedFiles] = useState([]);
   const [fileList, setFileList] = useState([]);
+  const [commandOptionParams] = useState([
+    { size: "1000", quality: "70" },
+    { size: "500", quality: "50" },
+  ]);
 
   const handleDropProp = passedFiles => {
     //Empty array to add dropped file names for display in fileList
@@ -49,21 +53,19 @@ const FileList = ({ startTheMagick, setFilesDropped }) => {
 
     //Trying the magick
     droppedFiles.forEach((file, index) => {
-      Magick(file)
+      Magick(file, commandOptionParams)
         .then(({ originalFileName, processedImages, fileType }) => {
           //Remove file extension from original file name
           const extensionRegExp = /\.(jpe?g|png)/i;
           let extensionlessName = originalFileName.replace(extensionRegExp, "");
 
-          zipFolder.file(
-            `${extensionlessName}_v1.${fileType}`,
-            processedImages.find(f => f.name === `final_v1.${fileType}`).blob
-          );
-
-          zipFolder.file(
-            `${extensionlessName}_v2.${fileType}`,
-            processedImages.find(f => f.name === `final_v2.${fileType}`).blob
-          );
+          for (let i = 0; i < commandOptionParams.length; i++) {
+            zipFolder.file(
+              `${extensionlessName}_v${i}.${fileType}`,
+              processedImages.find(f => f.name === `final_v${i}.${fileType}`)
+                .blob
+            );
+          }
         })
         .then(() => {
           //If last file then show as complete to user
