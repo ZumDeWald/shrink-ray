@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import DragAndDrop from "./DragAndDrop.js";
 import Magick from "./Magick.js";
+import JSZip from "jszip";
 
 const FileList = ({ startTheMagick, setFilesDropped }) => {
   const [formats] = useState(["jpg", "jpeg", "png"]);
@@ -42,20 +43,45 @@ const FileList = ({ startTheMagick, setFilesDropped }) => {
   };
 
   if (!!startTheMagick) {
-    //Trying the magick
-    droppedFiles.forEach((file, i) => {
-      Magick(file);
+    //Create zip and find download link for attachment
+    let zip = new JSZip();
+    let zipFolder = zip.folder("processed");
 
-      //If last file then show as complete to user
-      if (i === droppedFiles.length - 1) {
-        setTimeout(() => {
-          document.querySelector("#output-image").src =
-            "https://p.kindpng.com/picc/s/79-791926_hook-check-mark-check-completed-finish-to-do.png";
-          document
-            .querySelector(".download-button")
-            .classList.remove("inactive");
-        }, 1000);
-      }
+    //Trying the magick
+    droppedFiles.forEach((file, index) => {
+      Magick(file)
+        .then(({ originalFileName, processedImages, fileType }) => {
+          //Remove file extension from original file name
+          const extensionRegExp = /\.(jpe?g|png)/i;
+          let extensionlessName = originalFileName.replace(extensionRegExp, "");
+
+          zipFolder.file(
+            `${extensionlessName}_v1.${fileType}`,
+            processedImages.find(f => f.name === `final_v1.${fileType}`).blob
+          );
+
+          zipFolder.file(
+            `${extensionlessName}_v2.${fileType}`,
+            processedImages.find(f => f.name === `final_v2.${fileType}`).blob
+          );
+        })
+        .then(() => {
+          //If last file then show as complete to user
+          if (index === droppedFiles.length - 1) {
+            let downloadLink = document.getElementById("download-link");
+
+            zip.generateAsync({ type: "blob" }).then(blob => {
+              let zipURL = URL.createObjectURL(blob);
+              downloadLink.href = zipURL;
+            });
+
+            document.querySelector("#output-image").src =
+              "https://p.kindpng.com/picc/s/79-791926_hook-check-mark-check-completed-finish-to-do.png";
+            document
+              .querySelector(".download-button")
+              .classList.remove("inactive");
+          }
+        });
     });
   }
 

@@ -1,64 +1,45 @@
 import { execute, buildInputFile } from "wasm-imagemagick";
-import JSZip from "jszip";
 
-//switch statement to preserve original file type for output file
+let commandOptions = ``;
+let fileType = "jpg";
+
 const checkFileType = typeToCheck => {
+  //switch statement to preserve original file type for output file
   switch (typeToCheck) {
     case "image/png":
-      return "png";
+      return (fileType = "png");
     case "image/jpg":
-      return "jpg";
+      return (fileType = "jpg");
     case "image/jpeg":
-      return "jpeg";
+      return (fileType = "jpeg");
     default:
-      return "jpg";
+      break;
   }
 };
 
 //ImageMagick
 async function Magick(file) {
-  //Find and save original file type for output file
-  let fileType = checkFileType(file.type);
+  checkFileType(file.type);
+
+  commandOptions = `
+    convert image1.png -resize '1000' image2.png
+    convert image2.png -quality '70' final_v1.${fileType}
+    convert image1.png -resize '500' image3.png
+    convert image3.png -quality '45' final_v2.${fileType}
+  `;
 
   const { outputFiles, exitCode, stderr } = await execute({
     inputFiles: [await buildInputFile(URL.createObjectURL(file), "image1.png")],
-    commands: [
-      `
-        convert image1.png -resize '1000' image2.png
-        convert image2.png -quality '70' final_v1.${fileType}
-        convert image1.png -resize '500' image3.png
-        convert image3.png -quality '45' final_v2.${fileType}
-      `,
-    ],
+    commands: [commandOptions],
   });
   if (exitCode) {
     alert(`There was an error with the command: ${stderr.join("\n")}`);
   } else {
-    //Remove file extension from original file name
-    const extensionRegExp = /\.(jpe?g|png)/i;
-    let extensionlessName = file.name.replace(extensionRegExp, "");
-
-    //Create and attache downloadable zip file
-    let downloadLink = document.getElementById("download-link");
-
-    let zip = new JSZip();
-
-    let zipFolder = zip.folder("processed");
-
-    zipFolder.file(
-      `${extensionlessName}_v1.${fileType}`,
-      outputFiles.find(f => f.name === `final_v1.${fileType}`).blob
-    );
-
-    zipFolder.file(
-      `${extensionlessName}_v2.${fileType}`,
-      outputFiles.find(f => f.name === `final_v2.${fileType}`).blob
-    );
-
-    zip.generateAsync({ type: "blob" }).then(blob => {
-      let imageBlobURL = URL.createObjectURL(blob);
-      downloadLink.href = imageBlobURL;
-    });
+    return {
+      originalFileName: file.name,
+      fileType: fileType,
+      processedImages: [...outputFiles],
+    };
   }
 }
 
