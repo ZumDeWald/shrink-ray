@@ -34,7 +34,6 @@ const DragAndDrop = props => {
     setDragging(false);
     if (!!e.dataTransfer.files && e.dataTransfer.files.length > 0) {
       props.handleDropProp(e.dataTransfer.files);
-      // e.dataTransfer.clearData();
       dragCounter = 0;
     }
   };

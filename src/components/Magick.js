@@ -1,4 +1,4 @@
-import { execute, buildInputFile, loadImageElement } from "wasm-imagemagick";
+import { execute, buildInputFile } from "wasm-imagemagick";
 import JSZip from "jszip";
 
 //switch statement to preserve original file type for output file
@@ -8,7 +8,7 @@ const checkFileType = typeToCheck => {
       return "png";
     case "image/jpg":
       return "jpg";
-    case "image.jpeg":
+    case "image/jpeg":
       return "jpeg";
     default:
       return "jpg";
@@ -34,12 +34,6 @@ async function Magick(file) {
   if (exitCode) {
     alert(`There was an error with the command: ${stderr.join("\n")}`);
   } else {
-    //Push first output image to the output-image
-    await loadImageElement(
-      outputFiles.find(f => f.name === `final_v1.${fileType}`),
-      document.getElementById("output-image")
-    );
-
     //Remove file extension from original file name
     const extensionRegExp = /\.(jpe?g|png)/i;
     let extensionlessName = file.name.replace(extensionRegExp, "");

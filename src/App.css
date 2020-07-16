@@ -98,11 +98,16 @@ header {
 }
 
 #output-image {
-  max-width: 500px;
+  width: 300px;
   padding: 0;
   margin: 10px 0;
 }
 
 .ghost {
   display: none;
+}
+
+.inactive {
+  pointer-events: none;
+  color: gray;
 }

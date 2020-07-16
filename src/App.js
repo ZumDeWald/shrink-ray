@@ -3,7 +3,8 @@ import FileList from "./components/FileList.js";
 import "./App.css";
 
 function App() {
-  const [imageProcessed, setImageProcessed] = useState(null);
+  const [startTheMagick, setStartTheMagick] = useState(false);
+  const [filesDropped, setFilesDropped] = useState(false);
 
   return (
     <div className="App">
@@ -12,28 +13,40 @@ function App() {
       </header>
       <main>
         <section className="drop-zone-container">
-          <FileList setImageProcessed={setImageProcessed} />
+          <FileList
+            startTheMagick={startTheMagick}
+            setFilesDropped={setFilesDropped}
+          />
         </section>
 
-        <section
-          className={
-            imageProcessed
-              ? "output-image-container"
-              : "output-image-container ghost"
-          }
-        >
-          <img
-            id="output-image"
-            src="https://images.unsplash.com/photo-1593935532255-a0574cc8fbf1?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=789&q=80"
-            alt="Trying it"
-          />
+        <section className="output-image-container">
+          {startTheMagick === true && (
+            <img
+              id="output-image"
+              src="https://pixelpapa.com/wp-content/uploads/2018/11/32.gif"
+              alt="Trying it"
+            />
+          )}
 
           <div>
-            <a id="download-link" href="/" download="result.zip">
-              <button className="download-button">
-                Download Results From Last Upload
+            {startTheMagick === true ? (
+              <a id="download-link" href="/" download="result.zip">
+                <button className="download-button inactive">
+                  Download Results
+                </button>
+              </a>
+            ) : (
+              <button
+                className={
+                  filesDropped ? "download-button" : "download-button ghost"
+                }
+                onClick={() => {
+                  setStartTheMagick(true);
+                }}
+              >
+                Process Images
               </button>
-            </a>
+            )}
           </div>
         </section>
       </main>
