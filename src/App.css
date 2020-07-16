@@ -57,7 +57,7 @@ header {
 }
 
 #drop-zone > li:last-of-type::after {
-  content: " (available below ↓)";
+  content: " (Click Process Below ↓)";
 }
 
 #drop-zone > li.no-bg {

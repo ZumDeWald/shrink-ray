@@ -31,7 +31,7 @@ function App() {
           <div>
             {startTheMagick === true ? (
               <a id="download-link" href="/" download="result.zip">
-                <button className="download-button inactive">
+                <button className="download-button ghost">
                   Download Results
                 </button>
               </a>

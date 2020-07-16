@@ -8,8 +8,9 @@ const FileList = ({ startTheMagick, setFilesDropped }) => {
   const [droppedFiles, setDroppedFiles] = useState([]);
   const [fileList, setFileList] = useState([]);
   const [commandOptionParams] = useState([
-    { size: "1000", quality: "70" },
-    { size: "500", quality: "50" },
+    { size: "350", quality: "75" },
+    { size: "350", quality: "10" },
+    { size: "350", quality: "7" },
   ]);
 
   const handleDropProp = passedFiles => {
@@ -19,7 +20,7 @@ const FileList = ({ startTheMagick, setFilesDropped }) => {
     //Change passedFiles into array
     let newFiles = [...passedFiles];
 
-    setDroppedFiles([...droppedFiles, ...newFiles]);
+    setDroppedFiles(droppedFiles => droppedFiles.concat(newFiles));
 
     //Check if acceptable file type in formats array
     if (
@@ -54,7 +55,7 @@ const FileList = ({ startTheMagick, setFilesDropped }) => {
     //Trying the magick
     droppedFiles.forEach((file, index) => {
       Magick(file, commandOptionParams)
-        .then(({ originalFileName, processedImages, fileType }) => {
+        .then(({ originalFileName, fileType, processedImages }) => {
           //Remove file extension from original file name
           const extensionRegExp = /\.(jpe?g|png)/i;
           let extensionlessName = originalFileName.replace(extensionRegExp, "");
@@ -81,7 +82,7 @@ const FileList = ({ startTheMagick, setFilesDropped }) => {
               "https://p.kindpng.com/picc/s/79-791926_hook-check-mark-check-completed-finish-to-do.png";
             document
               .querySelector(".download-button")
-              .classList.remove("inactive");
+              .classList.remove("ghost");
           }
         });
     });
