@@ -45,6 +45,8 @@ const DragAndDrop = props => {
     div.addEventListener("dragleave", handleDragOut);
     div.addEventListener("dragover", handleDrag);
     div.addEventListener("drop", handleDrop);
+    // React complains about not having the functions in the useEffect reference array, but if you add them or remove dropRef the app does not perform as expected, so linting for that line is disabled.
+    // eslint-disable-next-line
   }, [dropRef]);
 
   return (

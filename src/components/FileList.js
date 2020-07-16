@@ -1,80 +1,11 @@
 import React, { useState } from "react";
 import DragAndDrop from "./DragAndDrop.js";
-import { execute, buildInputFile, loadImageElement } from "wasm-imagemagick";
-import JSZip from "jszip";
+import Magick from "./Magick.js";
 
 const FileList = ({ setImageProcessed }) => {
   const [formats] = useState(["jpg", "jpeg", "png"]);
 
   const [files, setFiles] = useState([]);
-
-  //switch statement to preserve original file type for output file
-  const checkFileType = typeToCheck => {
-    switch (typeToCheck) {
-      case "image/png":
-        return "png";
-      case "image/jpg":
-        return "jpg";
-      case "image.jpeg":
-        return "jpeg";
-      default:
-        return "jpg";
-    }
-  };
-
-  //ImageMagick
-  async function magick(file) {
-    //Find and save original file type for output file
-    let fileType = checkFileType(file.type);
-
-    const { outputFiles, exitCode, stderr } = await execute({
-      inputFiles: [
-        await buildInputFile(URL.createObjectURL(file), "image1.png"),
-      ],
-      commands: [
-        `
-          convert image1.png -resize '1000' image2.png
-          convert image2.png -quality '70' final_v1.${fileType}
-          convert image1.png -resize '500' image3.png
-          convert image3.png -quality '45' final_v2.${fileType}
-        `,
-      ],
-    });
-    if (exitCode) {
-      alert(`There was an error with the command: ${stderr.join("\n")}`);
-    } else {
-      //Push first output image to the output-image
-      await loadImageElement(
-        outputFiles.find(f => f.name === `final_v1.${fileType}`),
-        document.getElementById("output-image")
-      );
-
-      //Trigger image preview / download display
-      setImageProcessed(true);
-
-      //Create and attache downloadable zip file
-      let downloadLink = document.getElementById("download-link");
-
-      let zip = new JSZip();
-
-      let zipFolder = zip.folder("processed");
-
-      zipFolder.file(
-        `${file.name}_v1.${fileType}`,
-        outputFiles.find(f => f.name === `final_v1.${fileType}`).blob
-      );
-
-      zipFolder.file(
-        `${file.name}_v2.${fileType}`,
-        outputFiles.find(f => f.name === `final_v2.${fileType}`).blob
-      );
-
-      zip.generateAsync({ type: "blob" }).then(blob => {
-        let imageBlobURL = URL.createObjectURL(blob);
-        downloadLink.href = imageBlobURL;
-      });
-    }
-  }
 
   const handleDropProp = passedFiles => {
     //Empty array, push new file names here before adding to main fileList
@@ -108,7 +39,10 @@ const FileList = ({ setImageProcessed }) => {
     setFiles(files => files.concat(fileList));
 
     //Trying the magick
-    magick(newFiles[0]);
+    Magick(newFiles[0]);
+
+    //Trigger image preview / download display
+    setImageProcessed(true);
   };
 
   return (
