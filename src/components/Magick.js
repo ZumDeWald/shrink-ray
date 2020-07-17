@@ -22,11 +22,9 @@ async function Magick(file, commandOptionParams) {
 
   commandOptionParams.forEach((param, i) => {
     commandOptions.push(
-      `
-    convert inputImage.${fileType} -resize ${param.size} image${i}.${fileType}`,
-      `image${i}.${fileType} -quality ${param.quality} -define jpeg:fancy-upsampling=off -define png:compression-filter=5 -define png:compression-level=9 -define png:compression-strategy=1 image${i}2.${fileType}
-    image${i}2.${fileType} -strip final_v${i}.${fileType}
-    `
+      `convert inputImage.${fileType} -resize ${param.size} image${i}.${fileType}`,
+      `convert image${i}.${fileType} -quality ${param.quality} -define jpeg:fancy-upsampling=off -define png:compression-filter=5 -define png:compression-level=9 -define png:compression-strategy=1 image${i}2.${fileType}`,
+      `convert image${i}2.${fileType} -strip final_v${i}.${fileType}`
     );
   });
 
