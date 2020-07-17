@@ -14,6 +14,7 @@ const FileList = ({ startTheMagick, setFilesDropped }) => {
   ]);
   const [progress, setProgress] = useState(new Set());
   const [zip] = useState(new JSZip());
+  // eslint-disable-next-line
   const [zipFolder, setZipFolder] = useState(zip.folder("processed"));
 
   const completeZip = () => {
@@ -108,9 +109,6 @@ const FileList = ({ startTheMagick, setFilesDropped }) => {
   ) {
     completeZip();
   }
-  console.log(progress);
-  console.log(progress.size);
-  console.log(droppedFiles.length * commandOptionParams.length);
 
   return (
     <DragAndDrop handleDropProp={handleDropProp}>
