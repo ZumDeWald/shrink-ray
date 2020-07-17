@@ -60,11 +60,18 @@ header {
   content: " (Click Process Below ↓)";
 }
 
-#drop-zone > li.no-bg {
-  background: transparent;
+#drop-zone > li:nth-of-type(2) {
+  border-radius: 0;
+  border-top: 1px solid aliceblue;
 }
 
-#drop-zone > li.no-bg::after {
+#drop-zone > li:first-of-type {
+  background: transparent;
+  border-radius: 0;
+  text-align: center;
+}
+
+#drop-zone > li:first-of-type::after {
   content: "";
 }
 

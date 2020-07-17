@@ -12,6 +12,11 @@ function App() {
         <h1>Shrink Ray</h1>
       </header>
       <main>
+        <section className="add-options-container">
+          <ul className="add-options">
+            <li></li>
+          </ul>
+        </section>
         <section className="drop-zone-container">
           <FileList
             startTheMagick={startTheMagick}

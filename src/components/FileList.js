@@ -12,6 +12,24 @@ const FileList = ({ startTheMagick, setFilesDropped }) => {
     { size: "75%", quality: "60" },
     { size: "500", quality: "60" },
   ]);
+  const [progress, setProgress] = useState(new Set());
+  const [zip] = useState(new JSZip());
+  const [zipFolder, setZipFolder] = useState(zip.folder("processed"));
+
+  const completeZip = () => {
+    //Finalize zip and attach to the download button
+    let downloadLink = document.getElementById("download-link");
+
+    zip.generateAsync({ type: "blob" }).then(blob => {
+      let zipURL = URL.createObjectURL(blob);
+      downloadLink.href = zipURL;
+    });
+
+    //Change UI to show complete status
+    document.querySelector("#output-image").src =
+      "https://p.kindpng.com/picc/s/79-791926_hook-check-mark-check-completed-finish-to-do.png";
+    document.querySelector(".download-button").classList.remove("ghost");
+  };
 
   const handleDropProp = passedFiles => {
     //Change passedFiles into array
@@ -51,14 +69,11 @@ const FileList = ({ startTheMagick, setFilesDropped }) => {
   };
 
   if (!!startTheMagick) {
-    //Create zip with folder inside
-    let zip = new JSZip();
-    let zipFolder = zip.folder("processed");
-
     //Activate the Magick!!
+
     for (let fileCount = 0; fileCount < droppedFiles.length; fileCount++) {
-      Magick(droppedFiles[fileCount], commandOptionParams)
-        .then(({ originalFileName, fileType, processedImages }) => {
+      Magick(droppedFiles[fileCount], commandOptionParams).then(
+        ({ originalFileName, fileType, processedImages }) => {
           // ^ "then" argument = object returned from Magick() destructured
           //Remove ".jp(e)g" or ".png" file extension from original file name
           const extensionRegExp = /\.(jpe?g|png)/i;
@@ -66,34 +81,36 @@ const FileList = ({ startTheMagick, setFilesDropped }) => {
 
           //For every version created add it to the zip
           for (let i = 0; i < commandOptionParams.length; i++) {
-            zipFolder.file(
-              `${extensionlessName}_v${i}.${fileType}`,
-              processedImages.find(f => f.name === `final_v${i}.${fileType}`)
-                .blob
+            setZipFolder(zipFolder =>
+              zipFolder.file(
+                `${extensionlessName}_v${i}.${fileType}`,
+                processedImages.find(f => f.name === `final_v${i}.${fileType}`)
+                  .blob
+              )
             );
-          }
-        })
-        .then(() => {
-          //If last file then show as complete to user
-          if (fileCount === droppedFiles.length - 1) {
-            //Finalize zip and attach to the download button
-            let downloadLink = document.getElementById("download-link");
 
-            zip.generateAsync({ type: "blob" }).then(blob => {
-              let zipURL = URL.createObjectURL(blob);
-              downloadLink.href = zipURL;
+            setProgress(progress => {
+              let newProgress = new Set(progress).add(
+                `${originalFileName}_v${i}`
+              );
+              return (progress = newProgress);
             });
-
-            //Change UI to show complete status
-            document.querySelector("#output-image").src =
-              "https://p.kindpng.com/picc/s/79-791926_hook-check-mark-check-completed-finish-to-do.png";
-            document
-              .querySelector(".download-button")
-              .classList.remove("ghost");
           }
-        });
+        }
+      );
     }
   }
+
+  //If last file then show as complete to user
+  if (
+    droppedFiles.length > 0 &&
+    progress.size === droppedFiles.length * commandOptionParams.length
+  ) {
+    completeZip();
+  }
+  console.log(progress);
+  console.log(progress.size);
+  console.log(droppedFiles.length * commandOptionParams.length);
 
   return (
     <DragAndDrop handleDropProp={handleDropProp}>
