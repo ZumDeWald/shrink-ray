@@ -8,19 +8,14 @@ const FileList = ({ startTheMagick, setFilesDropped }) => {
   const [droppedFiles, setDroppedFiles] = useState([]);
   const [fileList, setFileList] = useState([]);
   const [commandOptionParams] = useState([
-    { size: "350", quality: "75" },
-    { size: "350", quality: "10" },
-    { size: "350", quality: "7" },
+    { size: "100%", quality: "60" },
+    { size: "75%", quality: "60" },
+    { size: "500", quality: "60" },
   ]);
 
   const handleDropProp = passedFiles => {
-    //Empty array to add dropped file names for display in fileList
-    let newFileList = [];
-
     //Change passedFiles into array
     let newFiles = [...passedFiles];
-
-    setDroppedFiles(droppedFiles => droppedFiles.concat(newFiles));
 
     //Check if acceptable file type in formats array
     if (
@@ -38,28 +33,38 @@ const FileList = ({ startTheMagick, setFilesDropped }) => {
       return;
     }
 
+    //Empty array to add dropped file names for display in fileList
+    let newFileList = [];
+
+    //Add new files to state
+    setDroppedFiles(droppedFiles => droppedFiles.concat(newFiles));
+
+    //Add new file names to fileList to display to user
     for (let i = 0; i < newFiles.length; i++) {
       if (!newFiles[i].name) return;
       newFileList.push(newFiles[i].name);
     }
-
     setFileList(fileList => fileList.concat(newFileList));
+
+    //Let the UI know we have some files that could be processed
     setFilesDropped(true);
   };
 
   if (!!startTheMagick) {
-    //Create zip and find download link for attachment
+    //Create zip with folder inside
     let zip = new JSZip();
     let zipFolder = zip.folder("processed");
 
-    //Trying the magick
-    droppedFiles.forEach((file, index) => {
-      Magick(file, commandOptionParams)
+    //Activate the Magick!!
+    for (let fileCount = 0; fileCount < droppedFiles.length; fileCount++) {
+      Magick(droppedFiles[fileCount], commandOptionParams)
         .then(({ originalFileName, fileType, processedImages }) => {
-          //Remove file extension from original file name
+          // ^ "then" argument = object returned from Magick() destructured
+          //Remove ".jp(e)g" or ".png" file extension from original file name
           const extensionRegExp = /\.(jpe?g|png)/i;
           let extensionlessName = originalFileName.replace(extensionRegExp, "");
 
+          //For every version created add it to the zip
           for (let i = 0; i < commandOptionParams.length; i++) {
             zipFolder.file(
               `${extensionlessName}_v${i}.${fileType}`,
@@ -70,7 +75,8 @@ const FileList = ({ startTheMagick, setFilesDropped }) => {
         })
         .then(() => {
           //If last file then show as complete to user
-          if (index === droppedFiles.length - 1) {
+          if (fileCount === droppedFiles.length - 1) {
+            //Finalize zip and attach to the download button
             let downloadLink = document.getElementById("download-link");
 
             zip.generateAsync({ type: "blob" }).then(blob => {
@@ -78,6 +84,7 @@ const FileList = ({ startTheMagick, setFilesDropped }) => {
               downloadLink.href = zipURL;
             });
 
+            //Change UI to show complete status
             document.querySelector("#output-image").src =
               "https://p.kindpng.com/picc/s/79-791926_hook-check-mark-check-completed-finish-to-do.png";
             document
@@ -85,7 +92,7 @@ const FileList = ({ startTheMagick, setFilesDropped }) => {
               .classList.remove("ghost");
           }
         });
-    });
+    }
   }
 
   return (
