@@ -1,7 +1,5 @@
 import { execute, buildInputFile } from "wasm-imagemagick";
 
-let commandOptions = [];
-
 const checkFileType = typeToCheck => {
   //switch statement to preserve original file type for output file
   switch (typeToCheck) {
@@ -18,6 +16,7 @@ const checkFileType = typeToCheck => {
 
 //ImageMagick
 async function Magick(file, commandOptionParams) {
+  let commandOptions = [];
   let fileType = checkFileType(file.type);
 
   commandOptionParams.forEach((param, i) => {
@@ -32,6 +31,7 @@ async function Magick(file, commandOptionParams) {
     ],
     commands: commandOptions,
   });
+
   if (exitCode) {
     alert(`There was an error with the command: ${stderr.join("\n")}`);
   } else {
