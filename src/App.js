@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import FileList from "./components/FileList.js";
+import FileListItem from "./components/FileListItem.js";
 import "./App.css";
 
 function App() {
@@ -12,11 +13,7 @@ function App() {
         <h1>Shrink Ray</h1>
       </header>
       <main>
-        <section className="add-options-container">
-          <ul className="add-options">
-            <li></li>
-          </ul>
-        </section>
+        <section className="slide-in-info-container"></section>
         <section className="drop-zone-container">
           <FileList
             startTheMagick={startTheMagick}
@@ -25,7 +22,7 @@ function App() {
         </section>
 
         <section className="output-image-container">
-          {startTheMagick === true && (
+          {!!startTheMagick && (
             <img
               id="output-image"
               src="https://pixelpapa.com/wp-content/uploads/2018/11/32.gif"
@@ -34,7 +31,9 @@ function App() {
           )}
 
           <div>
-            {startTheMagick === true ? (
+            <FileListItem fileName="test1" />
+            <FileListItem fileName="test2" />
+            {!!startTheMagick ? (
               <a id="download-link" href="/" download="result.zip">
                 <button className="download-button ghost">
                   Download Results

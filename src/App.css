@@ -1,8 +1,44 @@
+/* -- Baseline -- */
+ul {
+  list-style: none;
+}
+
+img,
+video,
+div,
+section,
+article,
+p,
+ul,
+li,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  max-width: 100%;
+  padding: 0;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  width: 100%;
+}
+
 .App {
   display: grid;
   grid-template-rows: 100px 1fr;
   min-height: 100vh;
   background-color: #282c34;
+  /* This is mostly intended for prototyping; please download the pattern and re-host for production environments. Thank you! */
+  background-image: url("https://www.transparenttextures.com/patterns/subtle-dark-vertical.png");
 }
 
 .App-logo {
@@ -12,12 +48,22 @@
 
 header {
   background-color: #181c24;
+  /* This is mostly intended for prototyping; please download the pattern and re-host for production environments. Thank you! */
+  background-image: url("https://www.transparenttextures.com/patterns/subtle-dark-vertical.png");
   display: flex;
   flex-flow: row nowrap;
   align-items: center;
   justify-content: center;
   font-size: calc(10px + 2vmin);
-  color: white;
+  color: #efefef;
+}
+
+header h1 {
+  width: 80vw;
+}
+
+.slide-in-info-container {
+  min-height: 30px;
 }
 
 .drop-zone-container {
@@ -36,8 +82,6 @@ header {
   width: 80vw;
   max-height: 70%;
   padding: 10px 0;
-  margin: 0;
-  list-style: none;
   background: #000;
   color: #addd;
   border: 2px dashed #addd;
@@ -48,7 +92,6 @@ header {
   width: 100%;
   height: auto;
   padding: 8px 12px;
-  margin: 0 auto;
 }
 
 #drop-zone > li:last-of-type {
@@ -106,9 +149,67 @@ header {
 
 #output-image {
   width: 300px;
-  padding: 0;
   margin: 10px 0;
 }
+
+/* -- File List Items --  */
+
+.file-list-item {
+  width: 100vw;
+  margin: 25px auto;
+}
+
+.list-item-header {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  justify-content: space-around;
+  align-items: center;
+  width: 80vw;
+  padding: 10px 15px;
+  background: #ddd;
+  border-radius: 5px;
+}
+
+.list-item-header > a {
+  text-align: right;
+}
+
+.list-item-header > * {
+  width: 100%;
+}
+
+.renditions-list-container {
+  width: 80vw;
+  background: #181c24;
+  color: #efefef;
+  border-radius: 0 0 5px 5px;
+}
+
+.renditions-list-container > h3 {
+  padding: 10px 5px;
+  width: 95%;
+}
+
+.renditions-list {
+}
+
+.renditions-list-item {
+  display: grid;
+  grid-template-columns: 25px 1fr 1fr 1fr 25px;
+  padding: 10px;
+  border-top: 1px solid #efefef;
+  width: 95%;
+}
+
+.renditions-list-item:nth-of-type(even) {
+  background: #282c3480;
+}
+
+.fa-level-up-alt {
+  padding: 5px;
+}
+
+/* -- HELPER CLASSES -- */
 
 .ghost {
   display: none;
@@ -117,4 +218,12 @@ header {
 .inactive {
   pointer-events: none;
   color: gray;
+}
+
+.rotate-90 {
+  transform: rotate(90deg);
+}
+
+.desaturate {
+  color: #737373;
 }
