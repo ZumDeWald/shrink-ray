@@ -1,5 +1,12 @@
 import React, { useState } from "react";
 import DragAndDrop from "./DragAndDrop.js";
+import Upload from "@spectrum-icons/illustrations/Upload";
+import {
+  View,
+  IllustratedMessage,
+  Heading,
+  Content,
+} from "@adobe/react-spectrum";
 import Magick from "./Magick.js";
 import JSZip from "jszip";
 
@@ -112,11 +119,26 @@ const FileList = ({ startTheMagick, setFilesDropped }) => {
 
   return (
     <DragAndDrop handleDropProp={handleDropProp}>
-      <ul id="drop-zone">
+      <View
+        width="75vw"
+        paddingY="10px"
+        borderWidth="thick"
+        borderColor="mid"
+        borderRadius="medium"
+      >
+        <IllustratedMessage>
+          <Upload />
+          <Heading>Drop JPEG or PNG files here</Heading>
+          <Content>Up to 5 files, 5Mb each</Content>
+        </IllustratedMessage>
+      </View>
+
+      {/*     <ul id="drop-zone">
         <li className="no-bg">The Drop Zone</li>
         {fileList.length > 0 &&
           fileList.map((file, i) => <li key={`file ${i}`}>{file}</li>)}
       </ul>
+*/}
     </DragAndDrop>
   );
 };

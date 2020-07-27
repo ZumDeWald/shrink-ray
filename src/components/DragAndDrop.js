@@ -53,13 +53,7 @@ const DragAndDrop = props => {
       style={{ display: "inline-block", position: "relative" }}
       ref={dropRef}
     >
-      {!!dragging && (
-        <div className="drop-zone-overlay">
-          <div>
-            <div>Set it down right here!!</div>
-          </div>
-        </div>
-      )}
+      {!!dragging && <div className="drop-zone-overlay"></div>}
       {props.children}
     </div>
   );

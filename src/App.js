@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import FileList from "./components/FileList.js";
 import FileListItem from "./components/FileListItem.js";
+import { View } from "@adobe/react-spectrum";
 import "./App.css";
 
 function App() {
@@ -30,7 +31,7 @@ function App() {
             />
           )}
 
-          <div>
+          <View width="75vw">
             <FileListItem fileName="test1" />
             <FileListItem fileName="test2" />
             {!!startTheMagick ? (
@@ -51,7 +52,7 @@ function App() {
                 Process Images
               </button>
             )}
-          </div>
+          </View>
         </section>
       </main>
     </div>
