@@ -74,6 +74,13 @@ header h1 {
   min-height: 150px;
 }
 
+.drop-zone {
+  width: 75vw;
+  padding: 25px 0;
+  border: 2px dashed #addd;
+  border-radius: 25px;
+}
+
 #drop-zone {
   display: grid;
   justify-content: center;
