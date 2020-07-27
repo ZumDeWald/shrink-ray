@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import FileList from "./components/FileList.js";
-import FileListItem from "./components/FileListItem.js";
+import FileHandler from "./components/FileHandler.js";
+import FileItem from "./components/FileItem.js";
 import { View } from "@adobe/react-spectrum";
 import "./App.css";
 
@@ -16,7 +16,7 @@ function App() {
       <main>
         <section className="slide-in-info-container"></section>
         <section className="drop-zone-container">
-          <FileList
+          <FileHandler
             startTheMagick={startTheMagick}
             setFilesDropped={setFilesDropped}
           />
@@ -31,9 +31,9 @@ function App() {
             />
           )}
 
-          <View width="75vw">
-            <FileListItem fileName="test1" />
-            <FileListItem fileName="test2" />
+          <View width="75vw" maxWidth="800px">
+            <FileItem fileName="test1" />
+            <FileItem fileName="test2" />
             {!!startTheMagick ? (
               <a id="download-link" href="/" download="result.zip">
                 <button className="download-button ghost">

@@ -10,7 +10,7 @@ import {
 import Magick from "./Magick.js";
 import JSZip from "jszip";
 
-const FileList = ({ startTheMagick, setFilesDropped }) => {
+const FileHandler = ({ startTheMagick, setFilesDropped }) => {
   const [formats] = useState(["jpg", "jpeg", "png"]);
   const [droppedFiles, setDroppedFiles] = useState([]);
   const [fileList, setFileList] = useState([]);
@@ -143,4 +143,4 @@ const FileList = ({ startTheMagick, setFilesDropped }) => {
   );
 };
 
-export default FileList;
+export default FileHandler;
