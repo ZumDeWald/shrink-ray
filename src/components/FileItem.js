@@ -9,6 +9,7 @@ import {
   Heading,
 } from "@adobe/react-spectrum";
 import Add from "@spectrum-icons/workflow/Add";
+import Info from "@spectrum-icons/workflow/Info";
 import Rendition from "./Rendition.js";
 
 const FileItem = ({ file, position, handleDroppedFiles }) => {
@@ -84,14 +85,25 @@ const FileItem = ({ file, position, handleDroppedFiles }) => {
           width="100%"
           marginTop="size-100"
         >
-          <ActionButton
-            isQuiet
-            aria-label="Delete This Rendition"
-            onPress={addRendition}
-          >
-            <Add size="S" />
-            <Text>Add another rendition</Text>
-          </ActionButton>
+          {renditions.length < 5 ? (
+            <ActionButton
+              isQuiet
+              aria-label="Add new rendition"
+              onPress={addRendition}
+            >
+              <Add size="S" />
+              <Text>Add another rendition</Text>
+            </ActionButton>
+          ) : (
+            <ActionButton
+              isQuiet
+              aria-label="Max renditions reached"
+              isDisabled
+            >
+              <Info size="S" />
+              <Text>Limited to 5 renditions per dropped file</Text>
+            </ActionButton>
+          )}
         </Flex>
       </Well>
     </View>
