@@ -7,6 +7,7 @@ import "./App.css";
 function App() {
   const [startTheMagick, setStartTheMagick] = useState(false);
   const [filesDropped, setFilesDropped] = useState(false);
+  const [droppedFiles, setDroppedFiles] = useState([]);
 
   return (
     <div className="App">
@@ -19,6 +20,7 @@ function App() {
           <FileHandler
             startTheMagick={startTheMagick}
             setFilesDropped={setFilesDropped}
+            handleDroppedFiles={setDroppedFiles}
           />
         </section>
 
@@ -32,8 +34,15 @@ function App() {
           )}
 
           <View width="75vw" maxWidth="800px">
-            <FileItem fileName="test1" />
-            <FileItem fileName="test2" />
+            {droppedFiles.map((file, index) => (
+              <React.Fragment key={`${file.name} ${index}`}>
+                <FileItem
+                  file={file}
+                  position={index}
+                  handleDroppedFiles={setDroppedFiles}
+                />
+              </React.Fragment>
+            ))}
             {!!startTheMagick ? (
               <a id="download-link" href="/" download="result.zip">
                 <button className="download-button ghost">

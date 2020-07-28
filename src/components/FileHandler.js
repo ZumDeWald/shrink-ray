@@ -10,9 +10,12 @@ import {
 import Magick from "./Magick.js";
 import JSZip from "jszip";
 
-const FileHandler = ({ startTheMagick, setFilesDropped }) => {
+const FileHandler = ({
+  startTheMagick,
+  setFilesDropped,
+  handleDroppedFiles,
+}) => {
   const [formats] = useState(["jpg", "jpeg", "png"]);
-  const [droppedFiles, setDroppedFiles] = useState([]);
   const [fileList, setFileList] = useState([]);
   const [commandOptionParams] = useState([
     { size: "100%", quality: "60" },
@@ -63,7 +66,7 @@ const FileHandler = ({ startTheMagick, setFilesDropped }) => {
     let newFileList = [];
 
     //Add new files to state
-    setDroppedFiles(droppedFiles => droppedFiles.concat(newFiles));
+    handleDroppedFiles(droppedFiles => droppedFiles.concat(newFiles));
 
     //Add new file names to fileList to display to user
     for (let i = 0; i < newFiles.length; i++) {
@@ -76,46 +79,46 @@ const FileHandler = ({ startTheMagick, setFilesDropped }) => {
     setFilesDropped(true);
   };
 
-  if (!!startTheMagick) {
-    //Activate the Magick!!
-
-    for (let fileCount = 0; fileCount < droppedFiles.length; fileCount++) {
-      Magick(droppedFiles[fileCount], commandOptionParams).then(
-        ({ originalFileName, fileType, processedImages }) => {
-          // ^ "then" argument = object returned from Magick() destructured
-          //Remove ".jp(e)g" or ".png" file extension from original file name
-          const extensionRegExp = /\.(jpe?g|png)/i;
-          let extensionlessName = originalFileName.replace(extensionRegExp, "");
-
-          //For every version created add it to the zip
-          for (let i = 0; i < commandOptionParams.length; i++) {
-            setZipFolder(zipFolder =>
-              zipFolder.file(
-                `${extensionlessName}_v${i}.${fileType}`,
-                processedImages.find(f => f.name === `final_v${i}.${fileType}`)
-                  .blob
-              )
-            );
-
-            setProgress(progress => {
-              let newProgress = new Set(progress).add(
-                `${originalFileName}_v${i}`
-              );
-              return (progress = newProgress);
-            });
-          }
-        }
-      );
-    }
-  }
+  // if (!!startTheMagick) {
+  //   //Activate the Magick!!
+  //
+  //   for (let fileCount = 0; fileCount < droppedFiles.length; fileCount++) {
+  //     Magick(droppedFiles[fileCount], commandOptionParams).then(
+  //       ({ originalFileName, fileType, processedImages }) => {
+  //         // ^ "then" argument = object returned from Magick() destructured
+  //         //Remove ".jp(e)g" or ".png" file extension from original file name
+  //         const extensionRegExp = /\.(jpe?g|png)/i;
+  //         let extensionlessName = originalFileName.replace(extensionRegExp, "");
+  //
+  //         //For every version created add it to the zip
+  //         for (let i = 0; i < commandOptionParams.length; i++) {
+  //           setZipFolder(zipFolder =>
+  //             zipFolder.file(
+  //               `${extensionlessName}_v${i}.${fileType}`,
+  //               processedImages.find(f => f.name === `final_v${i}.${fileType}`)
+  //                 .blob
+  //             )
+  //           );
+  //
+  //           setProgress(progress => {
+  //             let newProgress = new Set(progress).add(
+  //               `${originalFileName}_v${i}`
+  //             );
+  //             return (progress = newProgress);
+  //           });
+  //         }
+  //       }
+  //     );
+  //   }
+  // }
 
   //If last file then show as complete to user
-  if (
-    droppedFiles.length > 0 &&
-    progress.size === droppedFiles.length * commandOptionParams.length
-  ) {
-    completeZip();
-  }
+  // if (
+  //   droppedFiles.length > 0 &&
+  //   progress.size === droppedFiles.length * commandOptionParams.length
+  // ) {
+  //   completeZip();
+  // }
 
   return (
     <DragAndDrop handleDropProp={handleDropProp}>
@@ -132,13 +135,6 @@ const FileHandler = ({ startTheMagick, setFilesDropped }) => {
           <Content>Up to 5 files, 5Mb each</Content>
         </IllustratedMessage>
       </View>
-
-      {/*     <ul id="drop-zone">
-        <li className="no-bg">The Drop Zone</li>
-        {fileList.length > 0 &&
-          fileList.map((file, i) => <li key={`file ${i}`}>{file}</li>)}
-      </ul>
-*/}
     </DragAndDrop>
   );
 };
