@@ -1,19 +1,30 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Flex,
   View,
   Well,
   Text,
-  Switch,
   Divider,
   ActionButton,
   Heading,
 } from "@adobe/react-spectrum";
-import Back from "@spectrum-icons/workflow/Back";
-import Delete from "@spectrum-icons/workflow/Delete";
 import Add from "@spectrum-icons/workflow/Add";
+import Rendition from "./Rendition.js";
 
 const FileItem = ({ fileName }) => {
+  const [renditions, setRenditions] = useState([
+    {
+      name: fileName,
+      resize: 0,
+      reduce: true,
+    },
+    {
+      name: fileName,
+      resize: 1000,
+      reduce: false,
+    },
+  ]);
+
   return (
     <View width="100%" marginY="size-600">
       <Well>
@@ -27,37 +38,14 @@ const FileItem = ({ fileName }) => {
           <Heading level={2}>File: {fileName}</Heading>
           <ActionButton>Remove File</ActionButton>
         </Flex>
-        <Flex
-          direction="row"
-          alignItems="center"
-          justifyContent="space-between"
-          width="100%"
-          UNSAFE_style={{ backgroundColor: "#181c24" }}
-        >
-          <Back size="S" UNSAFE_style={{ transform: "rotate(180deg)" }} />
-          <Text>{fileName}_500_shrunk.jpg</Text>
-          <Switch isSelected={true}>Resize [width: 500]</Switch>
-          <Switch isSelected={true}>Reduce file-size</Switch>
-          <Delete size="S" />
-        </Flex>
 
-        <Divider size="S" />
-
-        <Flex
-          direction="row"
-          alignItems="center"
-          justifyContent="space-between"
-          width="100%"
-          UNSAFE_style={{ backgroundColor: "#181c24" }}
-        >
-          <Back size="S" UNSAFE_style={{ transform: "rotate(180deg)" }} />
-          <Text>{fileName}_1000_shrunk.jpg</Text>
-          <Switch isSelected={true}>Resize [width: 1000]</Switch>
-          <Switch isSelected={true}>Reduce file-size</Switch>
-          <Delete size="S" />
-        </Flex>
-
-        <Divider size="s" />
+        {!!renditions &&
+          renditions.map((rendition, i) => (
+            <>
+              <Rendition data={rendition}></Rendition>
+              <Divider size="S" />
+            </>
+          ))}
 
         <Flex
           direction="row"
