@@ -41,10 +41,10 @@ const FileItem = ({ fileName }) => {
 
         {!!renditions &&
           renditions.map((rendition, i) => (
-            <>
-              <Rendition data={rendition}></Rendition>
+            <React.Fragment key={`${fileName} - ${i}`}>
+              <Rendition data={rendition} />
               <Divider size="S" />
-            </>
+            </React.Fragment>
           ))}
 
         <Flex
