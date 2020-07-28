@@ -21,6 +21,7 @@ function App() {
             startTheMagick={startTheMagick}
             setFilesDropped={setFilesDropped}
             handleDroppedFiles={setDroppedFiles}
+            limitReached={droppedFiles.length < 5 ? false : true}
           />
         </section>
 

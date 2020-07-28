@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import DragAndDrop from "./DragAndDrop.js";
 import Upload from "@spectrum-icons/illustrations/Upload";
+import NotFound from "@spectrum-icons/illustrations/NotFound";
 import {
   View,
   IllustratedMessage,
@@ -14,6 +15,7 @@ const FileHandler = ({
   startTheMagick,
   setFilesDropped,
   handleDroppedFiles,
+  limitReached,
 }) => {
   const [formats] = useState(["jpg", "jpeg", "png"]);
   const [fileList, setFileList] = useState([]);
@@ -129,11 +131,19 @@ const FileHandler = ({
         borderColor="mid"
         borderRadius="medium"
       >
-        <IllustratedMessage>
-          <Upload />
-          <Heading>Drop JPEG or PNG files here</Heading>
-          <Content>Up to 5 files, 5Mb each</Content>
-        </IllustratedMessage>
+        {!!limitReached ? (
+          <IllustratedMessage>
+            <NotFound />
+            <Heading>Limit of 5 files Reached</Heading>
+            <Content>Refresh page to start a new list</Content>
+          </IllustratedMessage>
+        ) : (
+          <IllustratedMessage>
+            <Upload />
+            <Heading>Drop JPEG or PNG files here</Heading>
+            <Content>Up to 5 files, 5Mb each</Content>
+          </IllustratedMessage>
+        )}
       </View>
     </DragAndDrop>
   );
