@@ -1,9 +1,9 @@
 import React from "react";
-import { Grid, Text, Switch } from "@adobe/react-spectrum";
+import { Grid, Text, Switch, ActionButton } from "@adobe/react-spectrum";
 import Back from "@spectrum-icons/workflow/Back";
 import Delete from "@spectrum-icons/workflow/Delete";
 
-const Rendition = ({ name, data, position, updateSelf }) => {
+const Rendition = ({ name, data, position, updateSelf, removeSelf }) => {
   const checkResize = () => {
     if (!!data.resize) {
       return false;
@@ -47,7 +47,15 @@ const Rendition = ({ name, data, position, updateSelf }) => {
       >
         Reduce file-size
       </Switch>
-      <Delete size="S" margin="size-100" />
+      <ActionButton
+        isQuiet
+        aria-label="Delete This Rendition"
+        onPress={() => {
+          removeSelf(position);
+        }}
+      >
+        <Delete size="S" margin="size-100" />
+      </ActionButton>
     </Grid>
   );
 };

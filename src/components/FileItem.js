@@ -29,6 +29,21 @@ const FileItem = ({ fileName }) => {
     setRenditions(copy);
   };
 
+  const addRendition = () => {
+    setRenditions(renditions =>
+      renditions.concat({
+        resize: 0,
+        reduce: true,
+      })
+    );
+  };
+
+  const removeRendition = position => {
+    let copy = [...renditions];
+    copy.splice(position, 1);
+    setRenditions(copy);
+  };
+
   return (
     <View width="100%" marginY="size-600">
       <Well>
@@ -51,6 +66,7 @@ const FileItem = ({ fileName }) => {
                 data={rendition}
                 position={i}
                 updateSelf={updateRenditions}
+                removeSelf={removeRendition}
               />
               <Divider size="S" />
             </React.Fragment>
@@ -63,8 +79,16 @@ const FileItem = ({ fileName }) => {
           width="100%"
           marginTop="size-100"
         >
-          <Add size="S" />
-          <Text>Add another rendition</Text>
+          <ActionButton
+            isQuiet
+            aria-label="Delete This Rendition"
+            onPress={() => {
+              addRendition();
+            }}
+          >
+            <Add size="S" />
+            <Text>Add another rendition</Text>
+          </ActionButton>
         </Flex>
       </Well>
     </View>
