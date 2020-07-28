@@ -3,7 +3,15 @@ import { Grid, Text, Switch } from "@adobe/react-spectrum";
 import Back from "@spectrum-icons/workflow/Back";
 import Delete from "@spectrum-icons/workflow/Delete";
 
-const Rendition = ({ data }) => {
+const Rendition = ({ name, data, position, updateSelf }) => {
+  const checkResize = () => {
+    if (!!data.resize) {
+      return false;
+    } else {
+      return "500";
+    }
+  };
+
   return (
     <Grid
       columns={["40px", "1fr", "1fr", "1fr", "40px"]}
@@ -19,12 +27,26 @@ const Rendition = ({ data }) => {
         UNSAFE_style={{ transform: "rotate(180deg)" }}
       />
       <Text>
-        {data.name}
+        {name}
         {!!data.resize && `_${data.resize}`}
         {!!data.reduce && `_shrunk`}.jpg
       </Text>
-      <Switch isSelected={!!data.resize}>Resize</Switch>
-      <Switch isSelected={data.reduce}>Reduce file-size</Switch>
+      <Switch
+        isSelected={!!data.resize}
+        onChange={() => {
+          updateSelf(position, "resize", checkResize());
+        }}
+      >
+        Resize
+      </Switch>
+      <Switch
+        isSelected={data.reduce}
+        onChange={() => {
+          updateSelf(position, "reduce", !data.reduce);
+        }}
+      >
+        Reduce file-size
+      </Switch>
       <Delete size="S" margin="size-100" />
     </Grid>
   );

@@ -14,16 +14,20 @@ import Rendition from "./Rendition.js";
 const FileItem = ({ fileName }) => {
   const [renditions, setRenditions] = useState([
     {
-      name: fileName,
       resize: 0,
       reduce: true,
     },
     {
-      name: fileName,
       resize: 1000,
       reduce: false,
     },
   ]);
+
+  const updateRenditions = (position, property, value) => {
+    let copy = [...renditions];
+    copy[position][property] = value;
+    setRenditions(copy);
+  };
 
   return (
     <View width="100%" marginY="size-600">
@@ -42,7 +46,12 @@ const FileItem = ({ fileName }) => {
         {!!renditions &&
           renditions.map((rendition, i) => (
             <React.Fragment key={`${fileName} - ${i}`}>
-              <Rendition data={rendition} />
+              <Rendition
+                name={fileName}
+                data={rendition}
+                position={i}
+                updateSelf={updateRenditions}
+              />
               <Divider size="S" />
             </React.Fragment>
           ))}
