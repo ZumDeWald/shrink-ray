@@ -24,14 +24,17 @@ const FileItem = ({ file, position, handleDroppedFiles }) => {
   //Handle Renditions
   const [renditions, setRenditions] = useState([
     {
-      resize: 0,
+      resize: "off",
       reduce: true,
     },
   ]);
 
   const updateRenditions = (position, property, value) => {
+    let newValue;
+    value === "off" ? (newValue = "off") : (newValue = Number(value));
     let copy = [...renditions];
-    copy[position][property] = value;
+    copy[position][property] = newValue;
+    console.log(copy[position]);
     setRenditions(copy);
   };
 

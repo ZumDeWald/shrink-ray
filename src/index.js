@@ -6,7 +6,7 @@ import { Provider, defaultTheme } from "@adobe/react-spectrum";
 import * as serviceWorker from "./serviceWorker";
 
 ReactDOM.render(
-  <Provider theme={defaultTheme}>
+  <Provider theme={defaultTheme} colorScheme="dark">
     <App />
   </Provider>,
   document.getElementById("root")

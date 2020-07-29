@@ -8,41 +8,41 @@ import {
   Heading,
   Content,
 } from "@adobe/react-spectrum";
-import Magick from "./Magick.js";
-import JSZip from "jszip";
+// import Magick from "./Magick.js";
+// import JSZip from "jszip";
 
 const FileHandler = ({
   startTheMagick,
   setFilesDropped,
   handleDroppedFiles,
-  limitReached,
 }) => {
   const [formats] = useState(["jpg", "jpeg", "png"]);
-  const [fileList, setFileList] = useState([]);
-  const [commandOptionParams] = useState([
-    { size: "100%", quality: "60" },
-    { size: "75%", quality: "60" },
-    { size: "500", quality: "60" },
-  ]);
-  const [progress, setProgress] = useState(new Set());
-  const [zip] = useState(new JSZip());
+  const [fileCount, setFileCount] = useState(0);
+  // const [fileList, setFileList] = useState([]);
+  // const [commandOptionParams] = useState([
+  //   { size: "100%", quality: "60" },
+  //   { size: "75%", quality: "60" },
+  //   { size: "500", quality: "60" },
+  // ]);
+  // const [progress, setProgress] = useState(new Set());
+  // const [zip] = useState(new JSZip());
   // eslint-disable-next-line
-  const [zipFolder, setZipFolder] = useState(zip.folder("processed"));
+  // const [zipFolder, setZipFolder] = useState(zip.folder("processed"));
 
-  const completeZip = () => {
-    //Finalize zip and attach to the download button
-    let downloadLink = document.getElementById("download-link");
-
-    zip.generateAsync({ type: "blob" }).then(blob => {
-      let zipURL = URL.createObjectURL(blob);
-      downloadLink.href = zipURL;
-    });
-
-    //Change UI to show complete status
-    document.querySelector("#output-image").src =
-      "https://p.kindpng.com/picc/s/79-791926_hook-check-mark-check-completed-finish-to-do.png";
-    document.querySelector(".download-button").classList.remove("ghost");
-  };
+  // const completeZip = () => {
+  //   //Finalize zip and attach to the download button
+  //   let downloadLink = document.getElementById("download-link");
+  //
+  //   zip.generateAsync({ type: "blob" }).then(blob => {
+  //     let zipURL = URL.createObjectURL(blob);
+  //     downloadLink.href = zipURL;
+  //   });
+  //
+  //   //Change UI to show complete status
+  //   document.querySelector("#output-image").src =
+  //     "https://p.kindpng.com/picc/s/79-791926_hook-check-mark-check-completed-finish-to-do.png";
+  //   document.querySelector(".download-button").classList.remove("ghost");
+  // };
 
   const handleDropProp = passedFiles => {
     //Change passedFiles into array
@@ -64,21 +64,32 @@ const FileHandler = ({
       return;
     }
 
-    //Empty array to add dropped file names for display in fileList
-    let newFileList = [];
-
     //Add new files to state
-    handleDroppedFiles(droppedFiles => droppedFiles.concat(newFiles));
+    newFiles.forEach(newFile => {
+      if (fileCount < 5) {
+        setFileCount(fileCount => (fileCount += 1));
+        handleDroppedFiles(droppedFiles => {
+          let copy = [...droppedFiles];
+          copy.push(newFile);
+          return copy;
+        });
+      } else {
+        alert("Max of 5 files has been exceeded");
+      }
+    });
+
+    //Empty array to add dropped file names for display in fileList
+    // let newFileList = [];
 
     //Add new file names to fileList to display to user
-    for (let i = 0; i < newFiles.length; i++) {
-      if (!newFiles[i].name) return;
-      newFileList.push(newFiles[i].name);
-    }
-    setFileList(fileList => fileList.concat(newFileList));
+    // for (let i = 0; i < newFiles.length; i++) {
+    //   if (!newFiles[i].name) return;
+    //   newFileList.push(newFiles[i].name);
+    // }
+    // setFileList(fileList => fileList.concat(newFileList));
 
     //Let the UI know we have some files that could be processed
-    setFilesDropped(true);
+    // setFilesDropped(true);
   };
 
   // if (!!startTheMagick) {
@@ -131,17 +142,17 @@ const FileHandler = ({
         borderColor="mid"
         borderRadius="medium"
       >
-        {!!limitReached ? (
-          <IllustratedMessage>
-            <NotFound />
-            <Heading>Limit of 5 files Reached</Heading>
-            <Content>Refresh page to start a new list</Content>
-          </IllustratedMessage>
-        ) : (
+        {fileCount < 5 ? (
           <IllustratedMessage>
             <Upload />
             <Heading>Drop JPEG or PNG files here</Heading>
             <Content>Up to 5 files, 5Mb each</Content>
+          </IllustratedMessage>
+        ) : (
+          <IllustratedMessage>
+            <NotFound />
+            <Heading>Limit of 5 files Reached</Heading>
+            <Content>Refresh page to start a new list</Content>
           </IllustratedMessage>
         )}
       </View>
