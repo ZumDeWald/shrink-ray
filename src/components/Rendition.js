@@ -10,7 +10,14 @@ import {
 import Back from "@spectrum-icons/workflow/Back";
 import Delete from "@spectrum-icons/workflow/Delete";
 
-const Rendition = ({ name, data, position, updateSelf, removeSelf }) => {
+const Rendition = ({
+  name,
+  extension,
+  data,
+  position,
+  updateSelf,
+  removeSelf,
+}) => {
   const [thisWidth, setThisWidth] = useState(500);
 
   const checkResize = () => {
@@ -44,7 +51,7 @@ const Rendition = ({ name, data, position, updateSelf, removeSelf }) => {
       <Text>
         {name}
         {data.resize !== "off" && `_${data.resize}`}
-        {!!data.reduce && `_shrunk`}.jpg
+        {!!data.reduce && `_shrunk`}.{extension}
       </Text>
       <Flex direction="row" alignItems="center">
         <Switch

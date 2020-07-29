@@ -34,7 +34,6 @@ const FileItem = ({ file, position, handleDroppedFiles }) => {
     value === "off" ? (newValue = "off") : (newValue = Number(value));
     let copy = [...renditions];
     copy[position][property] = newValue;
-    console.log(copy[position]);
     setRenditions(copy);
   };
 
@@ -51,6 +50,26 @@ const FileItem = ({ file, position, handleDroppedFiles }) => {
     let copy = [...renditions];
     copy.splice(position, 1);
     setRenditions(copy);
+  };
+
+  //Separate filename and extension
+  const checkFileType = typeToCheck => {
+    //switch statement to preserve original file type for output file
+    switch (typeToCheck) {
+      case "image/png":
+        return "png";
+      case "image/jpg":
+        return "jpg";
+      case "image/jpeg":
+        return "jpeg";
+      default:
+        return "jpg";
+    }
+  };
+
+  const extensionRegExp = /\.(jpe?g|png)/i;
+  const removeExtension = fileName => {
+    return fileName.replace(extensionRegExp, "");
   };
 
   return (
@@ -71,7 +90,8 @@ const FileItem = ({ file, position, handleDroppedFiles }) => {
           renditions.map((rendition, i) => (
             <React.Fragment key={`${file.name} - ${i}`}>
               <Rendition
-                name={file.name}
+                name={removeExtension(file.name)}
+                extension={checkFileType(file.type)}
                 data={rendition}
                 position={i}
                 updateSelf={updateRenditions}
