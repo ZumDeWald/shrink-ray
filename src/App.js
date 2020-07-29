@@ -1,12 +1,14 @@
 import React, { useState } from "react";
-import FileList from "./components/FileList.js";
-import FileListItem from "./components/FileListItem.js";
-import { View } from "@adobe/react-spectrum";
+import FileHandler from "./components/FileHandler.js";
+import FileItem from "./components/FileItem.js";
+import { View, ActionButton, Text, Flex } from "@adobe/react-spectrum";
+import Images from "@spectrum-icons/workflow/Images";
 import "./App.css";
 
 function App() {
   const [startTheMagick, setStartTheMagick] = useState(false);
   const [filesDropped, setFilesDropped] = useState(false);
+  const [droppedFiles, setDroppedFiles] = useState([]);
 
   return (
     <div className="App">
@@ -16,9 +18,10 @@ function App() {
       <main>
         <section className="slide-in-info-container"></section>
         <section className="drop-zone-container">
-          <FileList
+          <FileHandler
             startTheMagick={startTheMagick}
             setFilesDropped={setFilesDropped}
+            handleDroppedFiles={setDroppedFiles}
           />
         </section>
 
@@ -31,10 +34,30 @@ function App() {
             />
           )}
 
-          <View width="75vw">
-            <FileListItem fileName="test1" />
-            <FileListItem fileName="test2" />
-            {!!startTheMagick ? (
+          <View width="75vw" maxWidth="800px">
+            {droppedFiles.map((file, index) => (
+              <React.Fragment key={`${file.name} ${index}`}>
+                <FileItem
+                  file={file}
+                  position={index}
+                  handleDroppedFiles={setDroppedFiles}
+                />
+              </React.Fragment>
+            ))}
+            {droppedFiles.length > 0 && (
+              <Flex
+                width="100%"
+                direction="row"
+                alignItems="center"
+                justifyContent="end"
+              >
+                <ActionButton aria-label="Process file">
+                  <Images size="S" />
+                  <Text>Run Batch</Text>
+                </ActionButton>
+              </Flex>
+            )}
+            {/* !!startTheMagick ? (
               <a id="download-link" href="/" download="result.zip">
                 <button className="download-button ghost">
                   Download Results
@@ -51,7 +74,7 @@ function App() {
               >
                 Process Images
               </button>
-            )}
+            ) */}
           </View>
         </section>
       </main>
