@@ -10,6 +10,7 @@ import {
 } from "@adobe/react-spectrum";
 import Add from "@spectrum-icons/workflow/Add";
 import Info from "@spectrum-icons/workflow/Info";
+import ImageCheckedOut from "@spectrum-icons/workflow/ImageCheckedOut";
 import Rendition from "./Rendition.js";
 
 const FileItem = ({ file, position, handleDroppedFiles }) => {
@@ -73,7 +74,7 @@ const FileItem = ({ file, position, handleDroppedFiles }) => {
   };
 
   return (
-    <View width="100%" marginY="size-600">
+    <View width="100%" marginY="size-300">
       <Well>
         <Flex
           direction="row"
@@ -104,7 +105,7 @@ const FileItem = ({ file, position, handleDroppedFiles }) => {
         <Flex
           direction="row"
           alignItems="center"
-          justifyContent="start"
+          justifyContent="space-between"
           width="100%"
           marginTop="size-100"
         >
@@ -127,6 +128,10 @@ const FileItem = ({ file, position, handleDroppedFiles }) => {
               <Text>Limited to 5 renditions per dropped file</Text>
             </ActionButton>
           )}
+          <ActionButton aria-label="Process file">
+            <ImageCheckedOut size="S" />
+            <Text>Process this file</Text>
+          </ActionButton>
         </Flex>
       </Well>
     </View>

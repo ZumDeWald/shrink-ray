@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import FileHandler from "./components/FileHandler.js";
 import FileItem from "./components/FileItem.js";
-import { View } from "@adobe/react-spectrum";
+import { View, ActionButton, Text, Flex } from "@adobe/react-spectrum";
+import Images from "@spectrum-icons/workflow/Images";
 import "./App.css";
 
 function App() {
@@ -43,7 +44,20 @@ function App() {
                 />
               </React.Fragment>
             ))}
-            {!!startTheMagick ? (
+            {droppedFiles.length > 0 && (
+              <Flex
+                width="100%"
+                direction="row"
+                alignItems="center"
+                justifyContent="end"
+              >
+                <ActionButton aria-label="Process file">
+                  <Images size="S" />
+                  <Text>Run Batch</Text>
+                </ActionButton>
+              </Flex>
+            )}
+            {/* !!startTheMagick ? (
               <a id="download-link" href="/" download="result.zip">
                 <button className="download-button ghost">
                   Download Results
@@ -60,7 +74,7 @@ function App() {
               >
                 Process Images
               </button>
-            )}
+            ) */}
           </View>
         </section>
       </main>
