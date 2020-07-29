@@ -41,7 +41,7 @@ const FileItem = ({ file, position, handleDroppedFiles }) => {
   const addRendition = () => {
     setRenditions(renditions =>
       renditions.concat({
-        resize: 0,
+        resize: "off",
         reduce: true,
       })
     );

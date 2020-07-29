@@ -24,7 +24,6 @@ const Rendition = ({ name, data, position, updateSelf, removeSelf }) => {
   const handleUpdateResize = value => {
     updateSelf(position, "resize", value);
     setThisWidth(value);
-    console.log(value);
   };
 
   return (
@@ -62,11 +61,12 @@ const Rendition = ({ name, data, position, updateSelf, removeSelf }) => {
           marginEnd="size-100"
           label="width"
           labelPosition="side"
-          type="number"
+          type="text"
+          pattern="[\d]+"
           onChange={value => {
             handleUpdateResize(value);
           }}
-          placeholder="in px"
+          placeholder={data.resize === "off" ? "in px" : thisWidth}
           isDisabled={data.resize === "off"}
           maxLength="4"
           minLength="1"
