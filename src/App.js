@@ -1,13 +1,12 @@
 import React, { useState } from "react";
 import FileHandler from "./components/FileHandler.js";
 import FileItem from "./components/FileItem.js";
-import { View, ActionButton, Text, Flex } from "@adobe/react-spectrum";
-import Images from "@spectrum-icons/workflow/Images";
+import BatchButton from "./components/BatchButton.js";
+import { View, Flex } from "@adobe/react-spectrum";
 import "./App.css";
 
 function App() {
-  const [startTheMagick, setStartTheMagick] = useState(false);
-  const [filesDropped, setFilesDropped] = useState(false);
+  const [runBatch, setRunBatch] = useState(false);
   const [droppedFiles, setDroppedFiles] = useState([]);
 
   return (
@@ -18,22 +17,10 @@ function App() {
       <main>
         <section className="slide-in-info-container"></section>
         <section className="drop-zone-container">
-          <FileHandler
-            startTheMagick={startTheMagick}
-            setFilesDropped={setFilesDropped}
-            handleDroppedFiles={setDroppedFiles}
-          />
+          <FileHandler handleDroppedFiles={setDroppedFiles} />
         </section>
 
         <section className="output-image-container">
-          {!!startTheMagick && (
-            <img
-              id="output-image"
-              src="https://pixelpapa.com/wp-content/uploads/2018/11/32.gif"
-              alt="Trying it"
-            />
-          )}
-
           <View width="75vw" maxWidth="800px">
             {droppedFiles.map((file, index) => (
               <React.Fragment key={`${file.name} ${index}`}>
@@ -51,30 +38,9 @@ function App() {
                 alignItems="center"
                 justifyContent="end"
               >
-                <ActionButton aria-label="Process file">
-                  <Images size="S" />
-                  <Text>Run Batch</Text>
-                </ActionButton>
+                <BatchButton runBatch={runBatch} setRunBatch={setRunBatch} />
               </Flex>
             )}
-            {/* !!startTheMagick ? (
-              <a id="download-link" href="/" download="result.zip">
-                <button className="download-button ghost">
-                  Download Results
-                </button>
-              </a>
-            ) : (
-              <button
-                className={
-                  filesDropped ? "download-button" : "download-button ghost"
-                }
-                onClick={() => {
-                  setStartTheMagick(true);
-                }}
-              >
-                Process Images
-              </button>
-            ) */}
           </View>
         </section>
       </main>

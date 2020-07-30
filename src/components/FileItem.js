@@ -10,10 +10,12 @@ import {
 } from "@adobe/react-spectrum";
 import Add from "@spectrum-icons/workflow/Add";
 import Info from "@spectrum-icons/workflow/Info";
-import ImageCheckedOut from "@spectrum-icons/workflow/ImageCheckedOut";
 import Rendition from "./Rendition.js";
+import ProcessFileButton from "./ProcessFileButton.js";
 
 const FileItem = ({ file, position, handleDroppedFiles }) => {
+  const [progress, setProgress] = useState("hold");
+
   const removeThisFile = () => {
     handleDroppedFiles(files => {
       let copy = [...files];
@@ -22,9 +24,32 @@ const FileItem = ({ file, position, handleDroppedFiles }) => {
     });
   };
 
-  //Handle Renditions
+  //Separate filename and extension
+  const checkFileType = typeToCheck => {
+    //switch statement to preserve original file type for output file
+    switch (typeToCheck) {
+      case "image/png":
+        return "png";
+      case "image/jpg":
+        return "jpg";
+      case "image/jpeg":
+        return "jpeg";
+      default:
+        return "jpg";
+    }
+  };
+
+  const extensionRegExp = /\.(jpe?g|png)/i;
+  const removeExtension = fileName => {
+    return fileName.replace(extensionRegExp, "");
+  };
+
+  //Array of rendition objects
   const [renditions, setRenditions] = useState([
     {
+      //Default rendition
+      fileName: removeExtension(file.name),
+      fileType: checkFileType(file.type),
       resize: "off",
       reduce: true,
     },
@@ -53,24 +78,8 @@ const FileItem = ({ file, position, handleDroppedFiles }) => {
     setRenditions(copy);
   };
 
-  //Separate filename and extension
-  const checkFileType = typeToCheck => {
-    //switch statement to preserve original file type for output file
-    switch (typeToCheck) {
-      case "image/png":
-        return "png";
-      case "image/jpg":
-        return "jpg";
-      case "image/jpeg":
-        return "jpeg";
-      default:
-        return "jpg";
-    }
-  };
-
-  const extensionRegExp = /\.(jpe?g|png)/i;
-  const removeExtension = fileName => {
-    return fileName.replace(extensionRegExp, "");
+  const startTheMagick = () => {
+    setProgress("processing");
   };
 
   return (
@@ -91,8 +100,6 @@ const FileItem = ({ file, position, handleDroppedFiles }) => {
           renditions.map((rendition, i) => (
             <React.Fragment key={`${file.name} - ${i}`}>
               <Rendition
-                name={removeExtension(file.name)}
-                extension={checkFileType(file.type)}
                 data={rendition}
                 position={i}
                 updateSelf={updateRenditions}
@@ -128,10 +135,10 @@ const FileItem = ({ file, position, handleDroppedFiles }) => {
               <Text>Limited to 5 renditions per dropped file</Text>
             </ActionButton>
           )}
-          <ActionButton aria-label="Process file">
-            <ImageCheckedOut size="S" />
-            <Text>Process this file</Text>
-          </ActionButton>
+          <ProcessFileButton
+            progress={progress}
+            beginProcess={startTheMagick}
+          />
         </Flex>
       </Well>
     </View>

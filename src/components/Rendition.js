@@ -10,14 +10,7 @@ import {
 import Back from "@spectrum-icons/workflow/Back";
 import Delete from "@spectrum-icons/workflow/Delete";
 
-const Rendition = ({
-  name,
-  extension,
-  data,
-  position,
-  updateSelf,
-  removeSelf,
-}) => {
+const Rendition = ({ data, position, updateSelf, removeSelf }) => {
   const [thisWidth, setThisWidth] = useState(500);
 
   const checkResize = () => {
@@ -49,9 +42,9 @@ const Rendition = ({
         UNSAFE_style={{ transform: "rotate(180deg)" }}
       />
       <Text>
-        {name}
+        {data.fileName}
         {data.resize !== "off" && `_${data.resize}`}
-        {!!data.reduce && `_shrunk`}.{extension}
+        {!!data.reduce && `_shrunk`}.{data.fileType}
       </Text>
       <Flex direction="row" alignItems="center">
         <Switch
