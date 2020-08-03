@@ -7,7 +7,6 @@ import {
   Divider,
   ActionButton,
   Heading,
-  TextField,
 } from "@adobe/react-spectrum";
 import Add from "@spectrum-icons/workflow/Add";
 import Info from "@spectrum-icons/workflow/Info";
@@ -40,6 +39,7 @@ const FileItem = ({ file, position, handleDroppedFiles }) => {
       setRenditions([
         {
           //Default rendition
+          position: 0,
           fileName: fileInfo.name,
           fileType: fileInfo.type,
           resize: "off",
@@ -60,6 +60,7 @@ const FileItem = ({ file, position, handleDroppedFiles }) => {
   const addRendition = () => {
     setRenditions(renditions =>
       renditions.concat({
+        position: renditions.length,
         fileName: fileInfo.name,
         fileType: fileInfo.type,
         resize: "off",

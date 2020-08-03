@@ -1,33 +1,34 @@
 import { execute, buildInputFile } from "wasm-imagemagick";
 
-const checkFileType = typeToCheck => {
-  //switch statement to preserve original file type for output file
-  switch (typeToCheck) {
-    case "image/png":
-      return "png";
-    case "image/jpg":
-      return "jpg";
-    case "image/jpeg":
-      return "jpeg";
-    default:
-      return "jpg";
-  }
-};
-
 //ImageMagick
-async function Magick(file, commandOptionParams) {
+async function Magick(file, rendition) {
   let commandOptions = [];
-  let fileType = checkFileType(file.type);
+  let commandString = ``;
 
-  commandOptionParams.forEach((param, i) => {
-    commandOptions.push(
-      `convert inputImage.${fileType} -resize ${param.size} -quality ${param.quality} -colors 256 -depth 8 -strip final_v${i}.${fileType}`
-    );
-  });
+  if (rendition.resize !== "off") {
+    commandString = `convert inputImage.${rendition.fileType} -resize ${rendition.resize}`;
+  }
+
+  if (!!rendition.reduce) {
+    commandString = commandString + `-quality 60 -colors 256 -depth 8 -strip`;
+  }
+
+  commandString += `final_v${rendition.position}.${rendition.fileType}`;
+
+  commandOptions.push(commandString);
+
+  // commandOptionParams.forEach((param, i) => {
+  //   commandOptions.push(
+  //     `convert inputImage.${rendition.fileType} -resize ${param.size} -quality ${param.quality} -colors 256 -depth 8 -strip final_v${i}.${rendition.fileType}`
+  //   );
+  // });
 
   const { outputFiles, exitCode, stderr } = await execute({
     inputFiles: [
-      await buildInputFile(URL.createObjectURL(file), `inputImage.${fileType}`),
+      await buildInputFile(
+        URL.createObjectURL(file),
+        `inputImage.${rendition.fileType}`
+      ),
     ],
     commands: commandOptions,
   });
@@ -37,7 +38,7 @@ async function Magick(file, commandOptionParams) {
   } else {
     return {
       originalFileName: file.name,
-      fileType: fileType,
+      fileType: rendition.fileType,
       processedImages: [...outputFiles],
     };
   }
