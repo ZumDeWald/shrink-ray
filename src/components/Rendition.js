@@ -10,7 +10,7 @@ import {
 import Back from "@spectrum-icons/workflow/Back";
 import Delete from "@spectrum-icons/workflow/Delete";
 
-const Rendition = ({ data, position, updateSelf, removeSelf }) => {
+const Rendition = ({ data, position, updateSelf, removeSelf, progress }) => {
   const [thisWidth, setThisWidth] = useState(500);
 
   const checkResize = () => {
@@ -42,13 +42,14 @@ const Rendition = ({ data, position, updateSelf, removeSelf }) => {
         UNSAFE_style={{ transform: "rotate(180deg)" }}
       />
       <Text>
-        {data.fileName}
+        [file]
         {data.resize !== "off" && `_${data.resize}`}
         {!!data.reduce && `_shrunk`}.{data.fileType}
       </Text>
       <Flex direction="row" alignItems="center">
         <Switch
           isSelected={data.resize !== "off"}
+          isDisabled={progress === "processing" || progress === "complete"}
           onChange={() => {
             updateSelf(position, "resize", checkResize());
           }}
@@ -75,6 +76,7 @@ const Rendition = ({ data, position, updateSelf, removeSelf }) => {
       </Flex>
       <Switch
         isSelected={data.reduce}
+        isDisabled={progress === "processing" || progress === "complete"}
         onChange={() => {
           updateSelf(position, "reduce", !data.reduce);
         }}
@@ -85,6 +87,7 @@ const Rendition = ({ data, position, updateSelf, removeSelf }) => {
       <ActionButton
         isQuiet
         aria-label="Delete This Rendition"
+        isDisabled={progress === "processing" || progress === "complete"}
         onPress={() => {
           removeSelf(position);
         }}

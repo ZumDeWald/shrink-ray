@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Flex,
   View,
@@ -7,14 +7,22 @@ import {
   Divider,
   ActionButton,
   Heading,
+  TextField,
 } from "@adobe/react-spectrum";
 import Add from "@spectrum-icons/workflow/Add";
 import Info from "@spectrum-icons/workflow/Info";
 import Rendition from "./Rendition.js";
 import ProcessFileButton from "./ProcessFileButton.js";
+import ProcessFileName from "./ProcessFileName.js";
 
 const FileItem = ({ file, position, handleDroppedFiles }) => {
   const [progress, setProgress] = useState("hold");
+  const [fileInfo, setFileInfo] = useState({});
+
+  //Get and store filename in state where it can be updated
+  useEffect(() => {
+    setFileInfo(ProcessFileName(file.name, file.type));
+  }, [file]);
 
   const removeThisFile = () => {
     handleDroppedFiles(files => {
@@ -24,36 +32,22 @@ const FileItem = ({ file, position, handleDroppedFiles }) => {
     });
   };
 
-  //Separate filename and extension
-  const checkFileType = typeToCheck => {
-    //switch statement to preserve original file type for output file
-    switch (typeToCheck) {
-      case "image/png":
-        return "png";
-      case "image/jpg":
-        return "jpg";
-      case "image/jpeg":
-        return "jpeg";
-      default:
-        return "jpg";
-    }
-  };
-
-  const extensionRegExp = /\.(jpe?g|png)/i;
-  const removeExtension = fileName => {
-    return fileName.replace(extensionRegExp, "");
-  };
-
   //Array of rendition objects
-  const [renditions, setRenditions] = useState([
-    {
-      //Default rendition
-      fileName: removeExtension(file.name),
-      fileType: checkFileType(file.type),
-      resize: "off",
-      reduce: true,
-    },
-  ]);
+  const [renditions, setRenditions] = useState([]);
+
+  useEffect(() => {
+    if (renditions.length === 0 && !!fileInfo.type) {
+      setRenditions([
+        {
+          //Default rendition
+          fileName: fileInfo.name,
+          fileType: fileInfo.type,
+          resize: "off",
+          reduce: true,
+        },
+      ]);
+    }
+  }, [renditions, fileInfo]);
 
   const updateRenditions = (position, property, value) => {
     let newValue;
@@ -66,6 +60,8 @@ const FileItem = ({ file, position, handleDroppedFiles }) => {
   const addRendition = () => {
     setRenditions(renditions =>
       renditions.concat({
+        fileName: fileInfo.name,
+        fileType: fileInfo.type,
         resize: "off",
         reduce: true,
       })
@@ -92,9 +88,18 @@ const FileItem = ({ file, position, handleDroppedFiles }) => {
           width="100%"
           marginBottom="size-100"
         >
-          <Heading level={2}>File: {file.name}</Heading>
-          <ActionButton onPress={removeThisFile}>Remove File</ActionButton>
+          <Heading level={2}>
+            File: {`${fileInfo.name}.${fileInfo.type}`}
+          </Heading>
+          <ActionButton
+            isDisabled={progress === "processing" || progress === "complete"}
+            onPress={removeThisFile}
+          >
+            Remove File
+          </ActionButton>
         </Flex>
+
+        {console.log(fileInfo.type)}
 
         {!!renditions &&
           renditions.map((rendition, i) => (
@@ -104,6 +109,7 @@ const FileItem = ({ file, position, handleDroppedFiles }) => {
                 position={i}
                 updateSelf={updateRenditions}
                 removeSelf={removeRendition}
+                progress={progress}
               />
               <Divider size="S" />
             </React.Fragment>
@@ -121,6 +127,7 @@ const FileItem = ({ file, position, handleDroppedFiles }) => {
               isQuiet
               aria-label="Add new rendition"
               onPress={addRendition}
+              isDisabled={progress === "processing" || progress === "complete"}
             >
               <Add size="S" />
               <Text>Add another rendition</Text>
