@@ -4,10 +4,35 @@ import FileItem from "./components/FileItem.js";
 import BatchButton from "./components/BatchButton.js";
 import { View, Flex } from "@adobe/react-spectrum";
 import "./App.css";
+import JSZip from "jszip";
 
 function App() {
-  const [runBatch, setRunBatch] = useState(false);
+  const [progress, setProgress] = useState("hold");
   const [droppedFiles, setDroppedFiles] = useState([]);
+
+  const startTheMagick = () => {
+    setProgress("processing");
+  };
+
+  //Setup Zip
+  const [zip] = useState(new JSZip());
+  // eslint-disable-next-line
+  const [zipFolder, setZipFolder] = useState(zip.folder("processed"));
+
+  const completeZip = () => {
+    //Finalize zip and attach to the download button
+    let downloadLink = document.getElementById("download-link");
+
+    zip.generateAsync({ type: "blob" }).then(blob => {
+      let zipURL = URL.createObjectURL(blob);
+      downloadLink.href = zipURL;
+    });
+
+    //Change UI to show complete status
+    document.querySelector("#output-image").src =
+      "https://p.kindpng.com/picc/s/79-791926_hook-check-mark-check-completed-finish-to-do.png";
+    document.querySelector(".download-button").classList.remove("ghost");
+  };
 
   return (
     <div className="App">
@@ -28,6 +53,7 @@ function App() {
                   file={file}
                   position={index}
                   handleDroppedFiles={setDroppedFiles}
+                  progress={progress}
                 />
               </React.Fragment>
             ))}
@@ -38,7 +64,10 @@ function App() {
                 alignItems="center"
                 justifyContent="end"
               >
-                <BatchButton runBatch={runBatch} setRunBatch={setRunBatch} />
+                <BatchButton
+                  progress={progress}
+                  startTheMagick={startTheMagick}
+                />
               </Flex>
             )}
           </View>

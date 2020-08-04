@@ -37,7 +37,7 @@ async function Magick(file, rendition) {
     alert(`There was an error with the command: ${stderr.join("\n")}`);
   } else {
     return {
-      originalFileName: file.name,
+      extensionlessFileName: rendition.name,
       fileType: rendition.fileType,
       processedImages: [...outputFiles],
     };

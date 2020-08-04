@@ -11,11 +11,16 @@ import {
 import Add from "@spectrum-icons/workflow/Add";
 import Info from "@spectrum-icons/workflow/Info";
 import Rendition from "./Rendition.js";
-import ProcessFileButton from "./ProcessFileButton.js";
 import ProcessFileName from "./ProcessFileName.js";
+import Magick from "./Magick.js";
 
-const FileItem = ({ file, position, handleDroppedFiles }) => {
-  const [progress, setProgress] = useState("hold");
+const FileItem = ({
+  file,
+  position,
+  handleDroppedFiles,
+  progress,
+  setZipFolder,
+}) => {
   const [fileInfo, setFileInfo] = useState({});
 
   //Get and store filename in state where it can be updated
@@ -75,9 +80,24 @@ const FileItem = ({ file, position, handleDroppedFiles }) => {
     setRenditions(copy);
   };
 
-  const startTheMagick = () => {
-    setProgress("processing");
-  };
+  useEffect(() => {
+    if (progress === "processing") {
+      renditions.forEach((rendition, index) => {
+        Magick(file, rendition).then(
+          ({ extensionlessFileName, fileType, processedImages }) => {
+            setZipFolder(zipFolder =>
+              zipFolder.file(
+                `${extensionlessFileName}_v${index}.${fileType}`,
+                processedImages.find(
+                  f => f.name === `final_v${index}.${fileType}`
+                ).blob
+              )
+            );
+          }
+        );
+      });
+    }
+  });
 
   return (
     <View width="100%" marginY="size-300">
@@ -93,14 +113,12 @@ const FileItem = ({ file, position, handleDroppedFiles }) => {
             File: {`${fileInfo.name}.${fileInfo.type}`}
           </Heading>
           <ActionButton
-            isDisabled={progress === "processing" || progress === "complete"}
+            isDisabled={progress !== "hold"}
             onPress={removeThisFile}
           >
             Remove File
           </ActionButton>
         </Flex>
-
-        {console.log(fileInfo.type)}
 
         {!!renditions &&
           renditions.map((rendition, i) => (
@@ -128,7 +146,7 @@ const FileItem = ({ file, position, handleDroppedFiles }) => {
               isQuiet
               aria-label="Add new rendition"
               onPress={addRendition}
-              isDisabled={progress === "processing" || progress === "complete"}
+              isDisabled={progress !== "hold"}
             >
               <Add size="S" />
               <Text>Add another rendition</Text>
@@ -143,10 +161,6 @@ const FileItem = ({ file, position, handleDroppedFiles }) => {
               <Text>Limited to 5 renditions per dropped file</Text>
             </ActionButton>
           )}
-          <ProcessFileButton
-            progress={progress}
-            beginProcess={startTheMagick}
-          />
         </Flex>
       </Well>
     </View>
