@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Flex,
   View,
@@ -10,10 +10,25 @@ import {
 } from "@adobe/react-spectrum";
 import Add from "@spectrum-icons/workflow/Add";
 import Info from "@spectrum-icons/workflow/Info";
-import ImageCheckedOut from "@spectrum-icons/workflow/ImageCheckedOut";
 import Rendition from "./Rendition.js";
+import ProcessFileName from "./ProcessFileName.js";
+import Magick from "./Magick.js";
 
-const FileItem = ({ file, position, handleDroppedFiles }) => {
+const FileItem = ({
+  file,
+  position,
+  handleDroppedFiles,
+  progress,
+  setZipFolder,
+  setFilesComplete,
+}) => {
+  const [fileInfo, setFileInfo] = useState({});
+
+  //Separate and store filename and extension in state where it can be updated
+  useEffect(() => {
+    setFileInfo(ProcessFileName(file.name, file.type));
+  }, [file]);
+
   const removeThisFile = () => {
     handleDroppedFiles(files => {
       let copy = [...files];
@@ -22,13 +37,30 @@ const FileItem = ({ file, position, handleDroppedFiles }) => {
     });
   };
 
-  //Handle Renditions
-  const [renditions, setRenditions] = useState([
-    {
-      resize: "off",
-      reduce: true,
-    },
-  ]);
+  //Array of rendition objects
+  const [renditions, setRenditions] = useState([]);
+  const [complete, setComplete] = useState(0);
+
+  useEffect(() => {
+    if (renditions.length === 0 && !!fileInfo.type) {
+      setRenditions([
+        {
+          //Default rendition
+          position: 0,
+          fileName: fileInfo.name,
+          fileType: fileInfo.type,
+          resize: "off",
+          reduce: true,
+        },
+      ]);
+    }
+  }, [renditions, fileInfo]);
+
+  useEffect(() => {
+    if (renditions.length > 0 && complete === renditions.length) {
+      setFilesComplete(filesComplete => (filesComplete += 1));
+    }
+  });
 
   const updateRenditions = (position, property, value) => {
     let newValue;
@@ -41,6 +73,9 @@ const FileItem = ({ file, position, handleDroppedFiles }) => {
   const addRendition = () => {
     setRenditions(renditions =>
       renditions.concat({
+        position: renditions.length,
+        fileName: fileInfo.name,
+        fileType: fileInfo.type,
         resize: "off",
         reduce: true,
       })
@@ -53,25 +88,30 @@ const FileItem = ({ file, position, handleDroppedFiles }) => {
     setRenditions(copy);
   };
 
-  //Separate filename and extension
-  const checkFileType = typeToCheck => {
-    //switch statement to preserve original file type for output file
-    switch (typeToCheck) {
-      case "image/png":
-        return "png";
-      case "image/jpg":
-        return "jpg";
-      case "image/jpeg":
-        return "jpeg";
-      default:
-        return "jpg";
+  //Watch for the Magick to start
+  useEffect(() => {
+    if (progress === "processing") {
+      renditions.forEach((rendition, index) => {
+        Magick(file, rendition)
+          .then(({ extensionlessFileName, fileType, processedImages }) => {
+            setZipFolder(zipFolder =>
+              zipFolder.file(
+                `${extensionlessFileName}_v${index + 1}.${fileType}`,
+                processedImages.find(
+                  f => f.name === `final_v${index}.${fileType}`
+                ).blob
+              )
+            );
+          })
+          .then(() => {
+            setComplete(complete => (complete += 1));
+          })
+          .catch(err => {
+            alert(err);
+          });
+      });
     }
-  };
-
-  const extensionRegExp = /\.(jpe?g|png)/i;
-  const removeExtension = fileName => {
-    return fileName.replace(extensionRegExp, "");
-  };
+  }, [progress, file, renditions, setZipFolder]);
 
   return (
     <View width="100%" marginY="size-300">
@@ -83,20 +123,26 @@ const FileItem = ({ file, position, handleDroppedFiles }) => {
           width="100%"
           marginBottom="size-100"
         >
-          <Heading level={2}>File: {file.name}</Heading>
-          <ActionButton onPress={removeThisFile}>Remove File</ActionButton>
+          <Heading level={2}>
+            File: {`${fileInfo.name}.${fileInfo.type}`}
+          </Heading>
+          <ActionButton
+            isDisabled={progress !== "hold"}
+            onPress={removeThisFile}
+          >
+            Remove File
+          </ActionButton>
         </Flex>
 
         {!!renditions &&
           renditions.map((rendition, i) => (
             <React.Fragment key={`${file.name} - ${i}`}>
               <Rendition
-                name={removeExtension(file.name)}
-                extension={checkFileType(file.type)}
                 data={rendition}
                 position={i}
                 updateSelf={updateRenditions}
                 removeSelf={removeRendition}
+                progress={progress}
               />
               <Divider size="S" />
             </React.Fragment>
@@ -114,6 +160,7 @@ const FileItem = ({ file, position, handleDroppedFiles }) => {
               isQuiet
               aria-label="Add new rendition"
               onPress={addRendition}
+              isDisabled={progress !== "hold"}
             >
               <Add size="S" />
               <Text>Add another rendition</Text>
@@ -128,10 +175,6 @@ const FileItem = ({ file, position, handleDroppedFiles }) => {
               <Text>Limited to 5 renditions per dropped file</Text>
             </ActionButton>
           )}
-          <ActionButton aria-label="Process file">
-            <ImageCheckedOut size="S" />
-            <Text>Process this file</Text>
-          </ActionButton>
         </Flex>
       </Well>
     </View>
