@@ -1,19 +1,19 @@
 import { execute, buildInputFile } from "wasm-imagemagick";
 
 //ImageMagick
-async function Magick(file, rendition) {
+async function Magick(file, rendition, index) {
   let commandOptions = [];
   let commandString = ``;
 
   if (rendition.resize !== "off" && !!rendition.reduce) {
-    commandString = `convert inputImage.${rendition.fileType} -resize ${rendition.resize} -quality 60 -colors 256 -depth 8 -strip final_v${rendition.position}.${rendition.fileType}`;
+    commandString = `convert inputImage.${rendition.fileType} -resize ${rendition.resize} -quality 60 -colors 256 -depth 8 -strip final_v${index}.${rendition.fileType}`;
   } else if (rendition.resize !== "off" && !rendition.reduce) {
-    commandString = `convert inputImage.${rendition.fileType} -resize ${rendition.resize} final_v${rendition.position}.${rendition.fileType}`;
+    commandString = `convert inputImage.${rendition.fileType} -resize ${rendition.resize} final_v${index}.${rendition.fileType}`;
   } else if (rendition.resize === "off" && !!rendition.reduce) {
-    commandString = `convert inputImage.${rendition.fileType} -quality 60 -colors 256 -depth 8 -strip final_v${rendition.position}.${rendition.fileType}`;
+    commandString = `convert inputImage.${rendition.fileType} -quality 60 -colors 256 -depth 8 -strip final_v${index}.${rendition.fileType}`;
   } else {
     throw new Error(
-      `No processing given for rendition ${rendition.position} of ${file.name}, please refresh and try again`
+      `No processing given for rendition ${index} of ${file.name}, please refresh and try again`
     );
   }
 

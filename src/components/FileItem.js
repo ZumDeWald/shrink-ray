@@ -47,7 +47,6 @@ const FileItem = ({
       setRenditions([
         {
           //Default rendition
-          position: 0,
           fileName: fileInfo.name,
           fileType: fileInfo.type,
           resize: "off",
@@ -63,18 +62,17 @@ const FileItem = ({
     }
   });
 
-  const updateRenditions = (position, property, value) => {
+  const updateRenditions = (renditionPosition, property, value) => {
     let newValue;
     value === "off" ? (newValue = "off") : (newValue = Number(value));
     let copy = [...renditions];
-    copy[position][property] = newValue;
+    copy[renditionPosition][property] = newValue;
     setRenditions(copy);
   };
 
   const addRendition = () => {
     setRenditions(renditions =>
       renditions.concat({
-        position: renditions.length,
         fileName: fileInfo.name,
         fileType: fileInfo.type,
         resize: "off",
@@ -83,17 +81,19 @@ const FileItem = ({
     );
   };
 
-  const removeRendition = position => {
-    let copy = [...renditions];
-    copy.splice(position, 1);
-    setRenditions(copy);
+  const removeRendition = renditionPosition => {
+    setRenditions(renditions => {
+      let copy = [...renditions];
+      copy.splice(renditionPosition, 1);
+      return copy;
+    });
   };
 
   //Watch for the Magick to start
   useEffect(() => {
     if (progress === "processing") {
       renditions.forEach((rendition, index) => {
-        Magick(file, rendition)
+        Magick(file, rendition, index)
           .then(({ extensionlessFileName, fileType, processedImages }) => {
             setZipFolder(zipFolder =>
               zipFolder.file(
