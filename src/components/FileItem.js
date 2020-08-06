@@ -80,6 +80,7 @@ const FileItem = ({
     setRenditions(copy);
   };
 
+  //Watch for the Magick to start
   useEffect(() => {
     if (progress === "processing") {
       renditions.forEach((rendition, index) => {
@@ -97,7 +98,7 @@ const FileItem = ({
         );
       });
     }
-  });
+  }, [progress, file, renditions, setZipFolder]);
 
   return (
     <View width="100%" marginY="size-300">

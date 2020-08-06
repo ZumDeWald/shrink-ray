@@ -5,16 +5,34 @@ async function Magick(file, rendition) {
   let commandOptions = [];
   let commandString = ``;
 
-  if (rendition.resize !== "off") {
-    commandString = `convert inputImage.${rendition.fileType} -resize ${rendition.resize}`;
+  if (rendition.resize !== "off" && !!rendition.reduce) {
+    commandString = `convert inputImage.${rendition.fileType} -resize ${rendition.resize} -quality 60 -colors 256 -depth 8 -strip final_v${rendition.position}.${rendition.fileType}`;
+  } else if (rendition.resize !== "off" && !rendition.reduce) {
+    commandString = `convert inputImage.${rendition.fileType} -resize ${rendition.resize} final_v${rendition.position}.${rendition.fileType}`;
+  } else if (rendition.resize === "off" && !!rendition.reduce) {
+    commandString = `convert inputImage.${rendition.fileType} -quality 60 -colors 256 -depth 8 -strip final_v${rendition.position}.${rendition.fileType}`;
+  } else {
+    alert(`No processing given for rendition ${rendition.position}`);
   }
 
-  if (!!rendition.reduce) {
-    commandString = commandString + `-quality 60 -colors 256 -depth 8 -strip`;
-  }
+  // commandString = `convert inputImage.${rendition.fileType} `;
+  //
+  // if (rendition.resize !== "off") {
+  //   commandString.concat(`-resize ${rendition.resize}`);
+  // }
+  //
+  // if (!!rendition.reduce) {
+  //   commandString = commandString.concat(
+  //     `-quality 60 -colors 256 -depth 8 -strip final_v${rendition.position}.${rendition.fileType}`
+  //   );
+  // } else {
+  //   commandString = commandString.concat(
+  //     `final_v${rendition.position}.${rendition.fileType}`
+  //   );
+  // }
 
-  commandString += `final_v${rendition.position}.${rendition.fileType}`;
-
+  // commandString.concat(`final_v${rendition.position}.${rendition.fileType}`);
+  console.log(commandString);
   commandOptions.push(commandString);
 
   // commandOptionParams.forEach((param, i) => {

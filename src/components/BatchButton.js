@@ -4,7 +4,7 @@ import Images from "@spectrum-icons/workflow/Images";
 import ImageAutoMode from "@spectrum-icons/workflow/ImageAutoMode";
 import ImageCheck from "@spectrum-icons/workflow/ImageCheck";
 
-const BatchButton = ({ progress, startTheMagick }) => {
+const BatchButton = ({ progress, startTheMagick, completeZip }) => {
   return (
     <>
       {progress === "hold" ? (
@@ -12,15 +12,10 @@ const BatchButton = ({ progress, startTheMagick }) => {
           <Images size="S" />
           <Text>Run Batch</Text>
         </ActionButton>
-      ) : progress === "processing" ? (
-        <ActionButton aria-label="Process file" isDisabled>
-          <ImageAutoMode size="S" />
-          <Text>Processing</Text>
-        </ActionButton>
       ) : (
-        <ActionButton aria-label="Process file" isDisabled>
+        <ActionButton aria-label="Process file" onPress={completeZip}>
           <ImageCheck size="S" />
-          <Text>Processing</Text>
+          <Text>Download Zip</Text>
         </ActionButton>
       )}
     </>
@@ -28,3 +23,12 @@ const BatchButton = ({ progress, startTheMagick }) => {
 };
 
 export default BatchButton;
+
+/*
+progress === "processing" ? (
+  <ActionButton aria-label="Process file" isDisabled>
+    <ImageAutoMode size="S" />
+    <Text>Processing</Text>
+  </ActionButton>
+) :
+*/

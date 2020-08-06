@@ -5,6 +5,7 @@ import BatchButton from "./components/BatchButton.js";
 import { View, Flex } from "@adobe/react-spectrum";
 import "./App.css";
 import JSZip from "jszip";
+import FileSaver from "file-saver";
 
 function App() {
   const [progress, setProgress] = useState("hold");
@@ -20,18 +21,9 @@ function App() {
   const [zipFolder, setZipFolder] = useState(zip.folder("processed"));
 
   const completeZip = () => {
-    //Finalize zip and attach to the download button
-    let downloadLink = document.getElementById("download-link");
-
     zip.generateAsync({ type: "blob" }).then(blob => {
-      let zipURL = URL.createObjectURL(blob);
-      downloadLink.href = zipURL;
+      FileSaver.saveAs(blob, "shrunk.zip");
     });
-
-    //Change UI to show complete status
-    document.querySelector("#output-image").src =
-      "https://p.kindpng.com/picc/s/79-791926_hook-check-mark-check-completed-finish-to-do.png";
-    document.querySelector(".download-button").classList.remove("ghost");
   };
 
   return (
@@ -54,6 +46,7 @@ function App() {
                   position={index}
                   handleDroppedFiles={setDroppedFiles}
                   progress={progress}
+                  setZipFolder={setZipFolder}
                 />
               </React.Fragment>
             ))}
@@ -67,6 +60,7 @@ function App() {
                 <BatchButton
                   progress={progress}
                   startTheMagick={startTheMagick}
+                  completeZip={completeZip}
                 />
               </Flex>
             )}
