@@ -58,6 +58,7 @@ function App() {
                   progress={progress}
                   setZipFolder={setZipFolder}
                   setFilesComplete={setFilesComplete}
+                  filesComplete={filesComplete}
                 />
               </React.Fragment>
             ))}

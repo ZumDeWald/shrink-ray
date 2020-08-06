@@ -21,6 +21,7 @@ const FileItem = ({
   progress,
   setZipFolder,
   setFilesComplete,
+  filesComplete,
 }) => {
   const [fileInfo, setFileInfo] = useState({});
 
@@ -58,7 +59,7 @@ const FileItem = ({
 
   useEffect(() => {
     if (renditions.length > 0 && complete === renditions.length) {
-      setFilesComplete(filesComplete => (filesComplete += 1));
+      setFilesComplete(filesComplete + 1);
     }
   });
 
@@ -104,14 +105,14 @@ const FileItem = ({
             );
           })
           .then(() => {
-            setComplete(complete => (complete += 1));
+            setComplete(complete + 1);
           })
           .catch(err => {
             alert(err);
           });
       });
     }
-  }, [progress, file, renditions, setZipFolder]);
+  }, [progress, file, renditions, setZipFolder, complete]);
 
   return (
     <View width="100%" marginY="size-300">
