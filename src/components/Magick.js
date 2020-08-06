@@ -12,34 +12,12 @@ async function Magick(file, rendition) {
   } else if (rendition.resize === "off" && !!rendition.reduce) {
     commandString = `convert inputImage.${rendition.fileType} -quality 60 -colors 256 -depth 8 -strip final_v${rendition.position}.${rendition.fileType}`;
   } else {
-    alert(`No processing given for rendition ${rendition.position}`);
+    throw new Error(
+      `No processing given for rendition ${rendition.position} of ${file.name}, please refresh and try again`
+    );
   }
 
-  // commandString = `convert inputImage.${rendition.fileType} `;
-  //
-  // if (rendition.resize !== "off") {
-  //   commandString.concat(`-resize ${rendition.resize}`);
-  // }
-  //
-  // if (!!rendition.reduce) {
-  //   commandString = commandString.concat(
-  //     `-quality 60 -colors 256 -depth 8 -strip final_v${rendition.position}.${rendition.fileType}`
-  //   );
-  // } else {
-  //   commandString = commandString.concat(
-  //     `final_v${rendition.position}.${rendition.fileType}`
-  //   );
-  // }
-
-  // commandString.concat(`final_v${rendition.position}.${rendition.fileType}`);
-  console.log(commandString);
   commandOptions.push(commandString);
-
-  // commandOptionParams.forEach((param, i) => {
-  //   commandOptions.push(
-  //     `convert inputImage.${rendition.fileType} -resize ${param.size} -quality ${param.quality} -colors 256 -depth 8 -strip final_v${i}.${rendition.fileType}`
-  //   );
-  // });
 
   const { outputFiles, exitCode, stderr } = await execute({
     inputFiles: [
@@ -55,7 +33,7 @@ async function Magick(file, rendition) {
     alert(`There was an error with the command: ${stderr.join("\n")}`);
   } else {
     return {
-      extensionlessFileName: rendition.name,
+      extensionlessFileName: rendition.fileName,
       fileType: rendition.fileType,
       processedImages: [...outputFiles],
     };

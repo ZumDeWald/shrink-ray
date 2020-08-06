@@ -12,6 +12,11 @@ const BatchButton = ({ progress, startTheMagick, completeZip }) => {
           <Images size="S" />
           <Text>Run Batch</Text>
         </ActionButton>
+      ) : progress === "processing" ? (
+        <ActionButton aria-label="Process file" isDisabled>
+          <ImageAutoMode size="S" />
+          <Text>Processing</Text>
+        </ActionButton>
       ) : (
         <ActionButton aria-label="Process file" onPress={completeZip}>
           <ImageCheck size="S" />
@@ -23,12 +28,3 @@ const BatchButton = ({ progress, startTheMagick, completeZip }) => {
 };
 
 export default BatchButton;
-
-/*
-progress === "processing" ? (
-  <ActionButton aria-label="Process file" isDisabled>
-    <ImageAutoMode size="S" />
-    <Text>Processing</Text>
-  </ActionButton>
-) :
-*/

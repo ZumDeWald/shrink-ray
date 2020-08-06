@@ -20,10 +20,11 @@ const FileItem = ({
   handleDroppedFiles,
   progress,
   setZipFolder,
+  setFilesComplete,
 }) => {
   const [fileInfo, setFileInfo] = useState({});
 
-  //Get and store filename in state where it can be updated
+  //Separate and store filename and extension in state where it can be updated
   useEffect(() => {
     setFileInfo(ProcessFileName(file.name, file.type));
   }, [file]);
@@ -38,6 +39,7 @@ const FileItem = ({
 
   //Array of rendition objects
   const [renditions, setRenditions] = useState([]);
+  const [complete, setComplete] = useState(0);
 
   useEffect(() => {
     if (renditions.length === 0 && !!fileInfo.type) {
@@ -53,6 +55,12 @@ const FileItem = ({
       ]);
     }
   }, [renditions, fileInfo]);
+
+  useEffect(() => {
+    if (renditions.length > 0 && complete === renditions.length) {
+      setFilesComplete(filesComplete => (filesComplete += 1));
+    }
+  });
 
   const updateRenditions = (position, property, value) => {
     let newValue;
@@ -84,18 +92,23 @@ const FileItem = ({
   useEffect(() => {
     if (progress === "processing") {
       renditions.forEach((rendition, index) => {
-        Magick(file, rendition).then(
-          ({ extensionlessFileName, fileType, processedImages }) => {
+        Magick(file, rendition)
+          .then(({ extensionlessFileName, fileType, processedImages }) => {
             setZipFolder(zipFolder =>
               zipFolder.file(
-                `${extensionlessFileName}_v${index}.${fileType}`,
+                `${extensionlessFileName}_v${index + 1}.${fileType}`,
                 processedImages.find(
                   f => f.name === `final_v${index}.${fileType}`
                 ).blob
               )
             );
-          }
-        );
+          })
+          .then(() => {
+            setComplete(complete => (complete += 1));
+          })
+          .catch(err => {
+            alert(err);
+          });
       });
     }
   }, [progress, file, renditions, setZipFolder]);
