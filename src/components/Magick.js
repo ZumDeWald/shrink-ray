@@ -4,17 +4,34 @@ import { execute, buildInputFile } from "wasm-imagemagick";
 async function Magick(file, rendition, index) {
   let commandOptions = [];
   let commandString = ``;
+  let hasResize = false;
+  let hasReduce = false;
+  let outputFileName = "";
 
   if (rendition.resize !== "off" && !!rendition.reduce) {
+    hasResize = true;
+    hasReduce = true;
     commandString = `convert inputImage.${rendition.fileType} -resize ${rendition.resize} -quality 60 -colors 256 -depth 8 -strip final_v${index}.${rendition.fileType}`;
   } else if (rendition.resize !== "off" && !rendition.reduce) {
+    hasResize = true;
     commandString = `convert inputImage.${rendition.fileType} -resize ${rendition.resize} final_v${index}.${rendition.fileType}`;
   } else if (rendition.resize === "off" && !!rendition.reduce) {
+    hasReduce = true;
     commandString = `convert inputImage.${rendition.fileType} -quality 60 -colors 256 -depth 8 -strip final_v${index}.${rendition.fileType}`;
   } else {
     throw new Error(
       `No processing given for rendition ${index} of ${file.name}, please refresh and try again`
     );
+  }
+
+  if (!!hasResize && !!hasReduce) {
+    outputFileName = `${rendition.fileName}_${rendition.resize}_shrunk`;
+  } else if (!hasResize && !!hasReduce) {
+    outputFileName = `${rendition.fileName}_shrunk`;
+  } else if (!!hasResize && !hasReduce) {
+    outputFileName = `${rendition.fileName}_${rendition.resize}`;
+  } else {
+    outputFileName = rendition.fileName;
   }
 
   commandOptions.push(commandString);
@@ -33,7 +50,7 @@ async function Magick(file, rendition, index) {
     alert(`There was an error with the command: ${stderr.join("\n")}`);
   } else {
     return {
-      extensionlessFileName: rendition.fileName,
+      extensionlessFileName: outputFileName,
       fileType: rendition.fileType,
       processedImages: [...outputFiles],
     };

@@ -4,6 +4,14 @@ import { Heading, Text, TextField, ActionButton } from "@adobe/react-spectrum";
 const FileName = ({ fileInfo, setFileInfo, updateRenditionsFileName }) => {
   const [editing, setEditing] = useState(false);
 
+  const replaceSpaces = value => {
+    let spaceFree = value.replace(" ", "_");
+    setFileInfo({
+      ...fileInfo,
+      name: spaceFree,
+    });
+  };
+
   return (
     <>
       {!!editing ? (
@@ -12,17 +20,15 @@ const FileName = ({ fileInfo, setFileInfo, updateRenditionsFileName }) => {
             File:{" "}
             <TextField
               width="size-1500"
+              marginStart="size-100"
               type="text"
               onChange={value => {
-                setFileInfo({
-                  ...fileInfo,
-                  name: value,
-                });
+                replaceSpaces(value);
               }}
               value={fileInfo.name}
               isQuiet
             />
-          </Text>{" "}
+          </Text>
           <Text>.{fileInfo.type}</Text>
           <ActionButton
             marginStart="size-100"
@@ -36,7 +42,9 @@ const FileName = ({ fileInfo, setFileInfo, updateRenditionsFileName }) => {
         </Heading>
       ) : (
         <Heading level={2}>
-          <Text>File: {fileInfo.name}</Text> <Text>.{fileInfo.type}</Text>
+          <Text>File:</Text>
+          <Text marginStart="size-100"> {fileInfo.name}</Text>{" "}
+          <Text>.{fileInfo.type}</Text>
           <ActionButton
             marginStart="size-100"
             onPress={() => {

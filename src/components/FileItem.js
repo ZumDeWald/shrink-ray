@@ -96,6 +96,7 @@ const FileItem = ({
       copy.forEach(rendition => {
         rendition.fileName = fileInfo.name;
       });
+      console.log(renditions[0].fileName);
       return copy;
     });
   };
@@ -108,7 +109,7 @@ const FileItem = ({
           .then(({ extensionlessFileName, fileType, processedImages }) => {
             setZipFolder(zipFolder =>
               zipFolder.file(
-                `${extensionlessFileName}_v${index + 1}.${fileType}`,
+                `${extensionlessFileName}.${fileType}`,
                 processedImages.find(
                   f => f.name === `final_v${index}.${fileType}`
                 ).blob
