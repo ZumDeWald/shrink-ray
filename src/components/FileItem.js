@@ -65,6 +65,7 @@ const FileItem = ({
   const updateRenditions = (renditionPosition, property, value) => {
     let newValue;
     value === "off" ? (newValue = "off") : (newValue = Number(value));
+    if (newValue !== "off" && isNaN(newValue)) return;
     let copy = [...renditions];
     copy[renditionPosition][property] = newValue;
     setRenditions(copy);
@@ -137,7 +138,7 @@ const FileItem = ({
 
         {!!renditions &&
           renditions.map((rendition, i) => (
-            <React.Fragment key={`${file.name} - ${i}`}>
+            <React.Fragment key={`${file.name} ${i}`}>
               <Rendition
                 data={rendition}
                 position={i}

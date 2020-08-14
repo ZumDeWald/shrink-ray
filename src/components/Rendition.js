@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   Grid,
   Flex,
@@ -11,19 +11,12 @@ import Back from "@spectrum-icons/workflow/Back";
 import Delete from "@spectrum-icons/workflow/Delete";
 
 const Rendition = ({ data, position, updateSelf, removeSelf, progress }) => {
-  const [thisWidth, setThisWidth] = useState(500);
-
   const checkResize = () => {
     if (data.resize === "off") {
-      return thisWidth;
+      return 0;
     } else {
       return "off";
     }
-  };
-
-  const handleUpdateResize = value => {
-    updateSelf(position, "resize", value);
-    setThisWidth(value);
   };
 
   return (
@@ -49,7 +42,7 @@ const Rendition = ({ data, position, updateSelf, removeSelf, progress }) => {
       <Flex direction="row" alignItems="center">
         <Switch
           isSelected={data.resize !== "off"}
-          isDisabled={progress === "processing" || progress === "complete"}
+          isDisabled={progress !== "hold"}
           onChange={() => {
             updateSelf(position, "resize", checkResize());
           }}
@@ -65,9 +58,10 @@ const Rendition = ({ data, position, updateSelf, removeSelf, progress }) => {
           type="text"
           pattern="[\d]+"
           onChange={value => {
-            handleUpdateResize(value);
+            updateSelf(position, "resize", value);
           }}
-          placeholder={data.resize === "off" ? "in px" : thisWidth}
+          placeholder="off"
+          value={data.resize}
           isDisabled={data.resize === "off"}
           maxLength="4"
           minLength="1"
@@ -76,7 +70,7 @@ const Rendition = ({ data, position, updateSelf, removeSelf, progress }) => {
       </Flex>
       <Switch
         isSelected={data.reduce}
-        isDisabled={progress === "processing" || progress === "complete"}
+        isDisabled={progress !== "hold"}
         onChange={() => {
           updateSelf(position, "reduce", !data.reduce);
         }}
@@ -87,7 +81,7 @@ const Rendition = ({ data, position, updateSelf, removeSelf, progress }) => {
       <ActionButton
         isQuiet
         aria-label="Delete This Rendition"
-        isDisabled={progress === "processing" || progress === "complete"}
+        isDisabled={progress !== "hold"}
         onPress={() => {
           removeSelf(position);
         }}
