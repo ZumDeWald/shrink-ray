@@ -29,7 +29,6 @@ function App() {
 
   useEffect(() => {
     if (droppedFiles.length > 0 && filesComplete === droppedFiles.length) {
-      console.log(filesComplete, droppedFiles.length);
       //Set completed to NaN to stop infinite re-renders for matching if statement
       setFilesComplete(NaN);
       setProgress("complete");

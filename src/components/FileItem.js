@@ -6,10 +6,10 @@ import {
   Text,
   Divider,
   ActionButton,
-  Heading,
 } from "@adobe/react-spectrum";
 import Add from "@spectrum-icons/workflow/Add";
 import Info from "@spectrum-icons/workflow/Info";
+import FileName from "./FileName.js";
 import Rendition from "./Rendition.js";
 import ProcessFileName from "./ProcessFileName.js";
 import Magick from "./Magick.js";
@@ -47,7 +47,6 @@ const FileItem = ({
       setRenditions([
         {
           //Default rendition
-          position: 0,
           fileName: fileInfo.name,
           fileType: fileInfo.type,
           resize: "off",
@@ -63,18 +62,18 @@ const FileItem = ({
     }
   });
 
-  const updateRenditions = (position, property, value) => {
+  const updateRenditions = (renditionPosition, property, value) => {
     let newValue;
     value === "off" ? (newValue = "off") : (newValue = Number(value));
+    if (newValue !== "off" && isNaN(newValue)) return;
     let copy = [...renditions];
-    copy[position][property] = newValue;
+    copy[renditionPosition][property] = newValue;
     setRenditions(copy);
   };
 
   const addRendition = () => {
     setRenditions(renditions =>
       renditions.concat({
-        position: renditions.length,
         fileName: fileInfo.name,
         fileType: fileInfo.type,
         resize: "off",
@@ -83,21 +82,34 @@ const FileItem = ({
     );
   };
 
-  const removeRendition = position => {
-    let copy = [...renditions];
-    copy.splice(position, 1);
-    setRenditions(copy);
+  const removeRendition = renditionPosition => {
+    setRenditions(renditions => {
+      let copy = [...renditions];
+      copy.splice(renditionPosition, 1);
+      return copy;
+    });
+  };
+
+  const updateRenditionsFileName = () => {
+    setRenditions(renditions => {
+      let copy = [...renditions];
+      copy.forEach(rendition => {
+        rendition.fileName = fileInfo.name;
+      });
+      console.log(renditions[0].fileName);
+      return copy;
+    });
   };
 
   //Watch for the Magick to start
   useEffect(() => {
     if (progress === "processing") {
       renditions.forEach((rendition, index) => {
-        Magick(file, rendition)
+        Magick(file, rendition, index)
           .then(({ extensionlessFileName, fileType, processedImages }) => {
             setZipFolder(zipFolder =>
               zipFolder.file(
-                `${extensionlessFileName}_v${index + 1}.${fileType}`,
+                `${extensionlessFileName}.${fileType}`,
                 processedImages.find(
                   f => f.name === `final_v${index}.${fileType}`
                 ).blob
@@ -124,9 +136,11 @@ const FileItem = ({
           width="100%"
           marginBottom="size-100"
         >
-          <Heading level={2}>
-            File: {`${fileInfo.name}.${fileInfo.type}`}
-          </Heading>
+          <FileName
+            fileInfo={fileInfo}
+            setFileInfo={setFileInfo}
+            updateRenditionsFileName={updateRenditionsFileName}
+          />
           <ActionButton
             isDisabled={progress !== "hold"}
             onPress={removeThisFile}
@@ -137,7 +151,7 @@ const FileItem = ({
 
         {!!renditions &&
           renditions.map((rendition, i) => (
-            <React.Fragment key={`${file.name} - ${i}`}>
+            <React.Fragment key={`${file.name} ${i}`}>
               <Rendition
                 data={rendition}
                 position={i}
