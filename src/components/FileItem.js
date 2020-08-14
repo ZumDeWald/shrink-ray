@@ -6,10 +6,10 @@ import {
   Text,
   Divider,
   ActionButton,
-  Heading,
 } from "@adobe/react-spectrum";
 import Add from "@spectrum-icons/workflow/Add";
 import Info from "@spectrum-icons/workflow/Info";
+import FileName from "./FileName.js";
 import Rendition from "./Rendition.js";
 import ProcessFileName from "./ProcessFileName.js";
 import Magick from "./Magick.js";
@@ -90,6 +90,16 @@ const FileItem = ({
     });
   };
 
+  const updateRenditionsFileName = () => {
+    setRenditions(renditions => {
+      let copy = [...renditions];
+      copy.forEach(rendition => {
+        rendition.fileName = fileInfo.name;
+      });
+      return copy;
+    });
+  };
+
   //Watch for the Magick to start
   useEffect(() => {
     if (progress === "processing") {
@@ -125,9 +135,11 @@ const FileItem = ({
           width="100%"
           marginBottom="size-100"
         >
-          <Heading level={2}>
-            File: {`${fileInfo.name}.${fileInfo.type}`}
-          </Heading>
+          <FileName
+            fileInfo={fileInfo}
+            setFileInfo={setFileInfo}
+            updateRenditionsFileName={updateRenditionsFileName}
+          />
           <ActionButton
             isDisabled={progress !== "hold"}
             onPress={removeThisFile}
