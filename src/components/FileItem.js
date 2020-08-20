@@ -59,8 +59,9 @@ const FileItem = ({
   useEffect(() => {
     if (renditions.length > 0 && complete === renditions.length) {
       setFilesComplete(filesComplete + 1);
+      setComplete(NaN);
     }
-  });
+  }, [renditions, complete, setComplete, filesComplete, setFilesComplete]);
 
   const updateRenditions = (renditionPosition, property, value) => {
     let newValue;
