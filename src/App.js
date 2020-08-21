@@ -71,7 +71,10 @@ function App() {
       <main>
         <section className="slide-in-info-container"></section>
         <section className="drop-zone-container">
-          <FileHandler handleDroppedFiles={setDroppedFiles} />
+          <FileHandler
+            droppedFiles={droppedFiles}
+            setDroppedFiles={setDroppedFiles}
+          />
         </section>
 
         <section className="output-image-container">

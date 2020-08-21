@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import DragAndDrop from "./DragAndDrop.js";
 import Upload from "@spectrum-icons/illustrations/Upload";
 import NotFound from "@spectrum-icons/illustrations/NotFound";
@@ -9,13 +9,29 @@ import {
   Content,
 } from "@adobe/react-spectrum";
 
-const FileHandler = ({
-  startTheMagick,
-  setFilesDropped,
-  handleDroppedFiles,
-}) => {
+const FileHandler = ({ droppedFiles, setDroppedFiles }) => {
   const [formats] = useState(["jpg", "jpeg", "png"]);
   const [fileCount, setFileCount] = useState(0);
+
+  useEffect(() => {
+    setFileCount(droppedFiles.length);
+  }, [droppedFiles, setFileCount]);
+
+  const addFilesMasterList = newFiles => {
+    newFiles.forEach(newFile => {
+      if (fileCount < 5) {
+        setDroppedFiles(droppedFiles => {
+          let copy = [...droppedFiles];
+          copy.push(newFile);
+          return copy;
+        });
+        console.log(droppedFiles);
+      } else {
+        alert("Max of 5 files has been exceeded");
+        return;
+      }
+    });
+  };
 
   const handleDropProp = passedFiles => {
     //Change passedFiles into array
@@ -37,24 +53,12 @@ const FileHandler = ({
       return;
     }
 
-    //Add new files to state
-    newFiles.forEach(newFile => {
-      if (fileCount < 5) {
-        setFileCount(fileCount => (fileCount += 1));
-        handleDroppedFiles(droppedFiles => {
-          let copy = [...droppedFiles];
-          copy.push(newFile);
-          return copy;
-        });
-      } else {
-        alert("Max of 5 files has been exceeded");
-      }
-    });
+    addFilesMasterList(newFiles);
   };
 
   return (
     <>
-      {fileCount < 5 ? (
+      {!!droppedFiles && droppedFiles.length < 5 ? (
         <DragAndDrop handleDropProp={handleDropProp}>
           <View
             width="75vw"

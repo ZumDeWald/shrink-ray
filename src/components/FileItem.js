@@ -97,7 +97,6 @@ const FileItem = ({
       copy.forEach(rendition => {
         rendition.fileName = fileInfo.name;
       });
-      console.log(renditions[0].fileName);
       return copy;
     });
   };
