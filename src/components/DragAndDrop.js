@@ -1,60 +1,72 @@
-import React, { useEffect, useState, useRef } from "react";
+import React from "react";
 
-const DragAndDrop = props => {
-  const dropRef = useRef(null);
-  const [dragging, setDragging] = useState(false);
-
-  let dragCounter = 0;
-
-  const handleDragIn = e => {
-    e.preventDefault();
-    e.stopPropagation();
-    if (!!e.dataTransfer.items && e.dataTransfer.items.length > 0) {
-      dragCounter += 1;
-      setDragging(true);
+const DragAndDrop = ({ children, handleDropProp }) => {
+  //Setup Drag&Drop Reducer
+  const reducer = (state, action) => {
+    switch (action.type) {
+      case "SET_DROP_DEPTH":
+        return { ...state, dropDepth: action.dropDepth };
+      case "SET_IN_DROP_ZONE":
+        return { ...state, inDropZone: action.inDropZone };
+      default:
+        return state;
     }
   };
 
-  const handleDragOut = e => {
-    e.preventDefault();
-    e.stopPropagation();
-    dragCounter -= 1;
-    if (dragCounter > 0) return;
-    setDragging(false);
+  const initialState = {
+    dropDepth: 0,
+    inDropZone: false,
   };
 
-  const handleDrag = e => {
+  const [data, dispatch] = React.useReducer(reducer, initialState);
+
+  const handleDragEnter = e => {
     e.preventDefault();
     e.stopPropagation();
+    dispatch({ type: "SET_DROP_DEPTH", dropDepth: data.dropDepth + 1 });
+  };
+
+  const handleDragLeave = e => {
+    e.preventDefault();
+    e.stopPropagation();
+    dispatch({ type: "SET_DROP_DEPTH", dropDepth: data.dropDepth - 1 });
+    dispatch({ type: "SET_IN_DROP_ZONE", inDropZone: false });
+  };
+
+  const handleDragOver = e => {
+    e.preventDefault();
+    e.stopPropagation();
+    e.dataTransfer.dropEffect = "copy";
+    dispatch({ type: "SET_IN_DROP_ZONE", inDropZone: true });
   };
 
   const handleDrop = e => {
     e.preventDefault();
     e.stopPropagation();
-    setDragging(false);
+    dispatch({ type: "SET_DROP_DEPTH", dropDepth: 0 });
+    dispatch({ type: "SET_IN_DROP_ZONE", inDropZone: false });
     if (!!e.dataTransfer.files && e.dataTransfer.files.length > 0) {
-      props.handleDropProp(e.dataTransfer.files);
-      dragCounter = 0;
+      handleDropProp(e.dataTransfer.files);
     }
   };
 
-  useEffect(() => {
-    let div = dropRef.current;
-    div.addEventListener("dragenter", handleDragIn);
-    div.addEventListener("dragleave", handleDragOut);
-    div.addEventListener("dragover", handleDrag);
-    div.addEventListener("drop", handleDrop);
-    // React complains about not having the functions in the useEffect reference array, but if you add them or remove dropRef the app does not perform as expected, so linting for that line is disabled.
-    // eslint-disable-next-line
-  }, [dropRef]);
-
   return (
     <div
-      style={{ display: "inline-block", position: "relative" }}
-      ref={dropRef}
+      className={!!data.inDropZone ? "drop-active" : "drop-inactive"}
+      onDragEnter={e => {
+        handleDragEnter(e);
+      }}
+      onDragLeave={e => {
+        handleDragLeave(e);
+      }}
+      onDragOver={e => {
+        handleDragOver(e);
+      }}
+      onDrop={e => {
+        handleDrop(e);
+      }}
     >
-      {!!dragging && <div className="drop-zone-overlay"></div>}
-      {props.children}
+      {children}
     </div>
   );
 };

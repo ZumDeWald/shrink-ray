@@ -35,6 +35,34 @@ function App() {
     }
   }, [filesComplete, droppedFiles]);
 
+  useEffect(() => {
+    //Set window to ignore files dropped outside dropzone
+    window.addEventListener(
+      "dragover",
+      e => {
+        e.preventDefault();
+      },
+      false
+    );
+    window.addEventListener(
+      "drop",
+      e => {
+        e.preventDefault();
+      },
+      false
+    );
+
+    return () => {
+      //Cleanup listener on component unmounting
+      window.removeEventListener("dragover", e => {
+        e.preventDefault();
+      });
+      window.removeEventListener("drop", e => {
+        e.preventDefault();
+      });
+    };
+  });
+
   return (
     <div className="App">
       <header>
@@ -43,7 +71,10 @@ function App() {
       <main>
         <section className="slide-in-info-container"></section>
         <section className="drop-zone-container">
-          <FileHandler handleDroppedFiles={setDroppedFiles} />
+          <FileHandler
+            droppedFiles={droppedFiles}
+            setDroppedFiles={setDroppedFiles}
+          />
         </section>
 
         <section className="output-image-container">
