@@ -17,22 +17,6 @@ const FileHandler = ({ droppedFiles, setDroppedFiles }) => {
     setFileCount(droppedFiles.length);
   }, [droppedFiles, setFileCount]);
 
-  const addFilesMasterList = newFiles => {
-    newFiles.forEach(newFile => {
-      if (fileCount < 5) {
-        setDroppedFiles(droppedFiles => {
-          let copy = [...droppedFiles];
-          copy.push(newFile);
-          return copy;
-        });
-        console.log(droppedFiles);
-      } else {
-        alert("Max of 5 files has been exceeded");
-        return;
-      }
-    });
-  };
-
   const handleDropProp = passedFiles => {
     //Change passedFiles into array
     let newFiles = [...passedFiles];
@@ -53,7 +37,21 @@ const FileHandler = ({ droppedFiles, setDroppedFiles }) => {
       return;
     }
 
-    addFilesMasterList(newFiles);
+    //Add files to fileList
+    let currentcount = fileCount;
+
+    newFiles.forEach(newFile => {
+      if (currentcount < 5) {
+        setDroppedFiles(droppedFiles => {
+          let copy = [...droppedFiles];
+          copy.push(newFile);
+          return copy;
+        });
+        currentcount += 1;
+      } else {
+        return alert("Max of 5 files has been exceeded");
+      }
+    });
   };
 
   return (

@@ -64,60 +64,17 @@ header h1 {
   width: 100vw;
   min-height: 150px;
 }
-/*
-#drop-zone {
-  display: grid;
-  justify-content: center;
-  align-content: start;
-  align-items: center;
-  width: 80vw;
-  max-height: 70%;
-  padding: 10px 0;
-  background: #000;
-  color: #addd;
-  border: 2px dashed #addd;
-  border-radius: 25px;
+
+.drop-inactive {
+  display: inline-block;
+  position: relative;
+  border: 3px solid transparent;
+  border-radius: 8px;
 }
 
-#drop-zone > li {
-  width: 100%;
-  height: auto;
-  padding: 8px 12px;
-}
-
-#drop-zone > li:last-of-type {
-  background: #fff3;
-  border-radius: 5px;
-}
-
-#drop-zone > li:last-of-type::after {
-  content: " (Click Process Below ↓)";
-}
-
-#drop-zone > li:nth-of-type(2) {
-  border-radius: 0;
-  border-top: 1px solid aliceblue;
-}
-
-#drop-zone > li:first-of-type {
-  background: transparent;
-  border-radius: 0;
-  text-align: center;
-}
-
-#drop-zone > li:first-of-type::after {
-  content: "";
-} */
-
-.drop-zone-overlay {
+.drop-active {
   border: 3px solid green;
   border-radius: 8px;
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  z-index: 9999;
 }
 
 .output-image-container {
