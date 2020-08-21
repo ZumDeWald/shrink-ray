@@ -53,29 +53,41 @@ const FileHandler = ({
   };
 
   return (
-    <DragAndDrop handleDropProp={handleDropProp}>
-      <View
-        width="75vw"
-        paddingY="10px"
-        borderWidth="thick"
-        borderColor="mid"
-        borderRadius="medium"
-      >
-        {fileCount < 5 ? (
-          <IllustratedMessage>
-            <Upload />
-            <Heading>Drop JPEG or PNG files here</Heading>
-            <Content>Up to 5 files, 5Mb each</Content>
-          </IllustratedMessage>
-        ) : (
-          <IllustratedMessage>
-            <NotFound />
-            <Heading>Limit of 5 files Reached</Heading>
-            <Content>Refresh page to start a new list</Content>
-          </IllustratedMessage>
-        )}
-      </View>
-    </DragAndDrop>
+    <>
+      {fileCount < 5 ? (
+        <DragAndDrop handleDropProp={handleDropProp}>
+          <View
+            width="75vw"
+            paddingY="10px"
+            borderWidth="thick"
+            borderColor="mid"
+            borderRadius="medium"
+          >
+            <IllustratedMessage>
+              <Upload />
+              <Heading>Drop JPEG or PNG files here</Heading>
+              <Content>Up to 5 files, 5Mb each</Content>
+            </IllustratedMessage>
+          </View>
+        </DragAndDrop>
+      ) : (
+        <div style={{ display: "inline-block", position: "relative" }}>
+          <View
+            width="75vw"
+            paddingY="10px"
+            borderWidth="thick"
+            borderColor="mid"
+            borderRadius="medium"
+          >
+            <IllustratedMessage>
+              <NotFound />
+              <Heading>Limit of 5 files Reached</Heading>
+              <Content>Refresh page to start a new list</Content>
+            </IllustratedMessage>
+          </View>
+        </div>
+      )}
+    </>
   );
 };
 
