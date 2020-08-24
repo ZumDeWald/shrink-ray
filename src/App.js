@@ -108,6 +108,7 @@ function App() {
           <FileHandler
             droppedFiles={droppedFiles}
             setDroppedFiles={setDroppedFiles}
+            progress={progress}
           />
         </section>
 

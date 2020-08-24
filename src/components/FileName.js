@@ -1,7 +1,12 @@
 import React, { useState } from "react";
 import { Heading, Text, TextField, ActionButton } from "@adobe/react-spectrum";
 
-const FileName = ({ fileInfo, setFileInfo, updateRenditionsFileName }) => {
+const FileName = ({
+  fileInfo,
+  setFileInfo,
+  updateRenditionsFileName,
+  progress,
+}) => {
   const [editing, setEditing] = useState(false);
 
   const replaceSpaces = value => {
@@ -47,6 +52,7 @@ const FileName = ({ fileInfo, setFileInfo, updateRenditionsFileName }) => {
           <Text>.{fileInfo.type}</Text>
           <ActionButton
             marginStart="size-100"
+            isDisabled={progress !== "hold"}
             onPress={() => {
               setEditing(true);
             }}
