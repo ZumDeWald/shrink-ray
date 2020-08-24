@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import DragAndDrop from "./DragAndDrop.js";
 import Upload from "@spectrum-icons/illustrations/Upload";
 import NotFound from "@spectrum-icons/illustrations/NotFound";
+import Timeout from "@spectrum-icons/illustrations/Timeout";
 import {
   View,
   IllustratedMessage,
@@ -9,7 +10,7 @@ import {
   Content,
 } from "@adobe/react-spectrum";
 
-const FileHandler = ({ droppedFiles, setDroppedFiles }) => {
+const FileHandler = ({ droppedFiles, setDroppedFiles, progress }) => {
   const [formats] = useState(["jpg", "jpeg", "png"]);
   const [fileCount, setFileCount] = useState(0);
 
@@ -56,7 +57,23 @@ const FileHandler = ({ droppedFiles, setDroppedFiles }) => {
 
   return (
     <>
-      {!!droppedFiles && droppedFiles.length < 5 ? (
+      {progress !== "hold" ? (
+        <div style={{ display: "inline-block", position: "relative" }}>
+          <View
+            width="75vw"
+            paddingY="10px"
+            borderWidth="thick"
+            borderColor="mid"
+            borderRadius="medium"
+          >
+            <IllustratedMessage>
+              <Timeout />
+              <Heading>Processing Images</Heading>
+              <Content>Choose Reset below to start a new batch</Content>
+            </IllustratedMessage>
+          </View>
+        </div>
+      ) : !!droppedFiles && droppedFiles.length < 5 ? (
         <DragAndDrop handleDropProp={handleDropProp}>
           <View
             width="75vw"

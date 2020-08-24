@@ -1,7 +1,12 @@
 import React, { useState } from "react";
 import { Heading, Text, TextField, ActionButton } from "@adobe/react-spectrum";
 
-const FileName = ({ fileInfo, setFileInfo, updateRenditionsFileName }) => {
+const FileName = ({
+  fileInfo,
+  setFileInfo,
+  updateRenditionsFileName,
+  progress,
+}) => {
   const [editing, setEditing] = useState(false);
 
   const replaceSpaces = value => {
@@ -10,6 +15,18 @@ const FileName = ({ fileInfo, setFileInfo, updateRenditionsFileName }) => {
       ...fileInfo,
       name: spaceFree,
     });
+  };
+
+  const handleClickOff = () => {
+    setEditing(false);
+    updateRenditionsFileName();
+  };
+
+  const handleKeyPress = e => {
+    if (e.key === "Enter" || e.key === "Escape") {
+      setEditing(false);
+      updateRenditionsFileName();
+    }
   };
 
   return (
@@ -25,8 +42,15 @@ const FileName = ({ fileInfo, setFileInfo, updateRenditionsFileName }) => {
               onChange={value => {
                 replaceSpaces(value);
               }}
+              onBlur={() => {
+                handleClickOff();
+              }}
+              onKeyDown={e => {
+                handleKeyPress(e);
+              }}
               value={fileInfo.name}
               isQuiet
+              aria-label="Update file name"
             />
           </Text>
           <Text>.{fileInfo.type}</Text>
@@ -47,6 +71,7 @@ const FileName = ({ fileInfo, setFileInfo, updateRenditionsFileName }) => {
           <Text>.{fileInfo.type}</Text>
           <ActionButton
             marginStart="size-100"
+            isDisabled={progress !== "hold"}
             onPress={() => {
               setEditing(true);
             }}

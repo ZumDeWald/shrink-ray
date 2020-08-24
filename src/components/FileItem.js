@@ -140,6 +140,7 @@ const FileItem = ({
             fileInfo={fileInfo}
             setFileInfo={setFileInfo}
             updateRenditionsFileName={updateRenditionsFileName}
+            progress={progress}
           />
           <ActionButton
             isDisabled={progress !== "hold"}
