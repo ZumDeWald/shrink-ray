@@ -17,6 +17,18 @@ const FileName = ({
     });
   };
 
+  const handleClickOff = () => {
+    setEditing(false);
+    updateRenditionsFileName();
+  };
+
+  const handleKeyPress = e => {
+    if (e.key === "Enter" || e.key === "Escape") {
+      setEditing(false);
+      updateRenditionsFileName();
+    }
+  };
+
   return (
     <>
       {!!editing ? (
@@ -29,6 +41,12 @@ const FileName = ({
               type="text"
               onChange={value => {
                 replaceSpaces(value);
+              }}
+              onBlur={() => {
+                handleClickOff();
+              }}
+              onKeyDown={e => {
+                handleKeyPress(e);
               }}
               value={fileInfo.name}
               isQuiet

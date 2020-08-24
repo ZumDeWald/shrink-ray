@@ -134,7 +134,9 @@ function App() {
                 alignItems="center"
                 justifyContent="end"
               >
-                <ActionButton onPress={resetApp}>Reset</ActionButton>
+                <ActionButton marginEnd="size-200" onPress={resetApp}>
+                  Reset
+                </ActionButton>
                 <BatchButton
                   progress={progress}
                   startTheMagick={startTheMagick}
