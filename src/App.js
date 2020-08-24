@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import FileHandler from "./components/FileHandler.js";
 import FileItem from "./components/FileItem.js";
 import BatchButton from "./components/BatchButton.js";
-import { View, Flex } from "@adobe/react-spectrum";
+import { View, Flex, ActionButton } from "@adobe/react-spectrum";
 import "./App.css";
 import JSZip from "jszip";
 import FileSaver from "file-saver";
@@ -16,15 +16,49 @@ function App() {
     setProgress("processing");
   };
 
+  //Get time string if needed for multiple Zip's
+  const intlOptions = {
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    hour12: false,
+  };
+
+  const generateNewTimeString = () => {
+    return new Intl.DateTimeFormat("default", intlOptions)
+      .format(new Date())
+      .replace(/:/g, "");
+  };
+
   //Setup Zip
-  const [zip] = useState(new JSZip());
-  // eslint-disable-next-line
-  const [zipFolder, setZipFolder] = useState(zip.folder("processed"));
+  const [zip, setZip] = useState({});
+  //eslint-disable-next-line
+  const [zipFolder, setZipFolder] = useState({});
+
+  useEffect(() => {
+    let newZip = new JSZip();
+    let newFolder = newZip.folder(generateNewTimeString());
+
+    setZip(newZip);
+    setZipFolder(newFolder);
+    //eslint-disable-next-line
+  }, []);
 
   const completeZip = () => {
     zip.generateAsync({ type: "blob" }).then(blob => {
       FileSaver.saveAs(blob, "shrunk.zip");
     });
+  };
+
+  const resetApp = () => {
+    let newZip = new JSZip();
+    let newFolder = newZip.folder(generateNewTimeString());
+
+    setZip(newZip);
+    setZipFolder(newFolder);
+    setDroppedFiles([]);
+    setFilesComplete(0);
+    setProgress("hold");
   };
 
   useEffect(() => {
@@ -99,6 +133,7 @@ function App() {
                 alignItems="center"
                 justifyContent="end"
               >
+                <ActionButton onPress={resetApp}>Reset</ActionButton>
                 <BatchButton
                   progress={progress}
                   startTheMagick={startTheMagick}
