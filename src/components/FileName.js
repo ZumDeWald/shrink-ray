@@ -32,6 +32,7 @@ const FileName = ({
               }}
               value={fileInfo.name}
               isQuiet
+              aria-label="Update file name"
             />
           </Text>
           <Text>.{fileInfo.type}</Text>
