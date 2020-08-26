@@ -2,8 +2,6 @@
 
 This app aims to be a one stop shop for resizing and compressing images to be web-ready.
 
---------------------------------------------------------------------------------
-
 ## -- Under the hood --
 
 ### Image Magick
@@ -23,8 +21,6 @@ Shrink-Ray uses [JSZip](https://stuk.github.io/jszip/) to build a zip folder for
 ### Drop Zone
 
 This [Smashing Magazine Article](https://www.smashingmagazine.com/2020/02/html-drag-drop-api-react/) by [Chidi Orji](https://www.smashingmagazine.com/author/chidi-orji/) was a huge help in creating the Drop Zone implemented in Shrink-Ray
-
---------------------------------------------------------------------------------
 
 ## -- Contributing --
 
@@ -51,8 +47,6 @@ Have an idea for a new feature? Found a bug that you can't shake? Review the exi
 
 - New Features -- How would / should it work? Are you willing/able to add this feature?
 - Bugs -- What are you doing with the tool when it happens? How many files, what type, what operating system / device, etc...
-
---------------------------------------------------------------------------------
 
 ## -- Feature List --
 
