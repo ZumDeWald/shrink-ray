@@ -1,3 +1,8 @@
+/* -- Custom Properties -- */
+:root {
+  --bg-img: url("./subtle-dark-vertical.png");
+}
+
 /* -- Baseline -- */
 ul {
   list-style: none;
@@ -28,8 +33,7 @@ h6 {
   grid-template-rows: 100px 1fr;
   min-height: 100vh;
   background-color: #282c34;
-  /* This is mostly intended for prototyping; please download the pattern and re-host for production environments. Thank you! */
-  background-image: url("https://www.transparenttextures.com/patterns/subtle-dark-vertical.png");
+  background-image: var(--bg-img);
 }
 
 .App-logo {
@@ -39,8 +43,7 @@ h6 {
 
 header {
   background-color: #181c24;
-  /* This is mostly intended for prototyping; please download the pattern and re-host for production environments. Thank you! */
-  background-image: url("https://www.transparenttextures.com/patterns/subtle-dark-vertical.png");
+  background-image: var(--bg-img);
   display: flex;
   flex-flow: row nowrap;
   align-items: center;
@@ -77,91 +80,8 @@ header h1 {
   border-radius: 8px;
 }
 
-.output-image-container {
-  width: 100%;
-  margin-bottom: 50px;
-  display: grid;
-  justify-content: center;
-  align-content: center;
-}
-
-#output-image {
-  width: 300px;
-  margin: 10px 0;
-}
-
-/* -- File List Items --  */
-
-.file-list-item {
-  width: 100vw;
-  margin: 25px auto;
-}
-
-.list-item-header {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  justify-content: space-around;
-  align-items: center;
-  width: 80vw;
-  padding: 10px 15px;
-  background: #ddd;
-  border-radius: 5px;
-}
-
-.list-item-header > a {
-  text-align: right;
-}
-
-.list-item-header > * {
-  width: 100%;
-}
-
-.renditions-list-container {
-  width: 80vw;
-  background: #181c24;
-  color: #efefef;
-  border-radius: 0 0 5px 5px;
-}
-
-.renditions-list-container > h3 {
-  padding: 10px 5px;
-  width: 95%;
-}
-
-.renditions-list {
-}
-
-.renditions-list-item {
-  display: grid;
-  grid-template-columns: 25px 1fr 1fr 1fr 25px;
-  padding: 10px;
-  border-top: 1px solid #efefef;
-  width: 95%;
-}
-
-.renditions-list-item:nth-of-type(even) {
-  background: #282c3480;
-}
-
-.fa-level-up-alt {
-  padding: 5px;
-}
-
 /* -- HELPER CLASSES -- */
-
-.ghost {
-  display: none;
-}
-
-.inactive {
-  pointer-events: none;
-  color: gray;
-}
 
 .rotate-90 {
   transform: rotate(90deg);
-}
-
-.desaturate {
-  color: #737373;
 }
