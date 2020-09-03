@@ -120,7 +120,8 @@ const FileItem = ({
             setComplete(complete + 1);
           })
           .catch(err => {
-            alert(err);
+            setComplete(complete + 1);
+            console.warn(err);
           });
       });
     }
