@@ -4,64 +4,36 @@ import FileItem from "./components/FileItem.js";
 import BatchButton from "./components/BatchButton.js";
 import { View, Flex, ActionButton } from "@adobe/react-spectrum";
 import "./App.css";
-import JSZip from "jszip";
-import FileSaver from "file-saver";
+import useZip from "./components/useZip.js";
+import GenerateTimeString from "./components/GenerateTimeString.js";
 
 function App() {
   const [progress, setProgress] = useState("hold");
   const [droppedFiles, setDroppedFiles] = useState([]);
   const [filesComplete, setFilesComplete] = useState(0);
+  const generateNewTimeString = GenerateTimeString();
+  const [completeZip, generateNewZip, setZipFolder] = useZip();
 
+  //Trigger processing
   const startTheMagick = () => {
     setProgress("processing");
   };
 
-  //Get time string if needed for multiple Zip's
-  const intlOptions = {
-    hour: "2-digit",
-    minute: "2-digit",
-    second: "2-digit",
-    hour12: false,
-  };
-
-  const generateNewTimeString = () => {
-    return new Intl.DateTimeFormat("default", intlOptions)
-      .format(new Date())
-      .replace(/:/g, "");
-  };
-
-  //Setup Zip
-  const [zip, setZip] = useState({});
-  //eslint-disable-next-line
-  const [zipFolder, setZipFolder] = useState({});
-
   useEffect(() => {
-    let newZip = new JSZip();
-    let newFolder = newZip.folder(generateNewTimeString());
-
-    setZip(newZip);
-    setZipFolder(newFolder);
+    //Generate initial Zip
+    generateNewZip(generateNewTimeString());
     //eslint-disable-next-line
   }, []);
 
-  const completeZip = () => {
-    zip.generateAsync({ type: "blob" }).then(blob => {
-      FileSaver.saveAs(blob, "shrunk.zip");
-    });
-  };
-
   const resetApp = () => {
-    let newZip = new JSZip();
-    let newFolder = newZip.folder(generateNewTimeString());
-
-    setZip(newZip);
-    setZipFolder(newFolder);
+    generateNewZip(generateNewTimeString());
     setDroppedFiles([]);
     setFilesComplete(0);
     setProgress("hold");
   };
 
   useEffect(() => {
+    //Watch total files vs 'completed' and set to complete if equal
     if (droppedFiles.length > 0 && filesComplete === droppedFiles.length) {
       //Set completed to NaN to stop infinite re-renders for matching if statement
       setFilesComplete(NaN);
@@ -85,9 +57,8 @@ function App() {
       },
       false
     );
-
+    //Cleanup listener on component unmounting
     return () => {
-      //Cleanup listener on component unmounting
       window.removeEventListener("dragover", e => {
         e.preventDefault();
       });
