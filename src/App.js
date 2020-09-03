@@ -112,7 +112,7 @@ function App() {
           />
         </section>
 
-        <section className="output-image-container">
+        <section className="file-list-container">
           <View width="75vw" maxWidth="800px">
             {droppedFiles.map((file, index) => (
               <React.Fragment key={`${file.name} ${index}`}>
