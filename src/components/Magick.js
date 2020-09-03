@@ -20,7 +20,9 @@ async function Magick(file, rendition, index) {
     commandString = `convert inputImage.${rendition.fileType} -quality 60 -colors 256 -depth 8 -strip final_v${index}.${rendition.fileType}`;
   } else {
     throw new Error(
-      `No processing given for rendition ${index} of ${file.name}, please refresh and try again`
+      `No changes given for rendition ${index + 1} of ${
+        file.name
+      }, it will be skipped`
     );
   }
 
