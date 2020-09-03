@@ -52,7 +52,7 @@ const DragAndDrop = ({ children, handleDropProp }) => {
 
   return (
     <div
-      className={!!data.inDropZone ? "drop-active" : "drop-inactive"}
+      className={!!data.inDropZone ? "drop-zone active" : "drop-zone"}
       onDragEnter={e => {
         handleDragEnter(e);
       }}
