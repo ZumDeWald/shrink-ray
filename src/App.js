@@ -4,8 +4,9 @@ import FileItem from "./components/FileItem.js";
 import BatchButton from "./components/BatchButton.js";
 import { View, Flex, ActionButton } from "@adobe/react-spectrum";
 import "./App.css";
-import JSZip from "jszip";
-import FileSaver from "file-saver";
+import useZip from "./components/useZip.js";
+// import JSZip from "jszip";
+// import FileSaver from "file-saver";
 
 function App() {
   const [progress, setProgress] = useState("hold");
@@ -16,46 +17,48 @@ function App() {
     setProgress("processing");
   };
 
-  //Get time string if needed for multiple Zip's
-  const intlOptions = {
-    hour: "2-digit",
-    minute: "2-digit",
-    second: "2-digit",
-    hour12: false,
-  };
+  const [completeZip, generateNewZip, setZipFolder] = useZip();
 
-  const generateNewTimeString = () => {
-    return new Intl.DateTimeFormat("default", intlOptions)
-      .format(new Date())
-      .replace(/:/g, "");
-  };
+  //Get time string if needed for multiple Zip's
+  // const intlOptions = {
+  //   hour: "2-digit",
+  //   minute: "2-digit",
+  //   second: "2-digit",
+  //   hour12: false,
+  // };
+  //
+  // const generateNewTimeString = () => {
+  //   return new Intl.DateTimeFormat("default", intlOptions)
+  //     .format(new Date())
+  //     .replace(/:/g, ".");
+  // };
 
   //Setup Zip
-  const [zip, setZip] = useState({});
-  //eslint-disable-next-line
-  const [zipFolder, setZipFolder] = useState({});
+  // const [zip, setZip] = useState({});
+  // const [, setZipFolder] = useState({});
 
   useEffect(() => {
-    let newZip = new JSZip();
-    let newFolder = newZip.folder(generateNewTimeString());
-
-    setZip(newZip);
-    setZipFolder(newFolder);
-    //eslint-disable-next-line
+    console.log(generateNewZip);
+    // let newZip = new JSZip();
+    // let newFolder = newZip.folder(generateNewTimeString());
+    //
+    // setZip(newZip);
+    // setZipFolder(newFolder);
+    //Generate initial Zip
+    generateNewZip();
   }, []);
-
-  const completeZip = () => {
-    zip.generateAsync({ type: "blob" }).then(blob => {
-      FileSaver.saveAs(blob, "shrunk.zip");
-    });
-  };
+  //
+  // const completeZip = () => {
+  //   zip.generateAsync({ type: "blob" }).then(blob => {
+  //     FileSaver.saveAs(blob, "shrunk.zip");
+  //   });
+  // };
 
   const resetApp = () => {
-    let newZip = new JSZip();
-    let newFolder = newZip.folder(generateNewTimeString());
+    // let newZip = new JSZip();
+    // let newFolder = newZip.folder(generateNewTimeString());
 
-    setZip(newZip);
-    setZipFolder(newFolder);
+    generateNewZip();
     setDroppedFiles([]);
     setFilesComplete(0);
     setProgress("hold");
