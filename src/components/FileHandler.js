@@ -8,6 +8,7 @@ import {
   IllustratedMessage,
   Heading,
   Content,
+  Text,
 } from "@adobe/react-spectrum";
 
 const FileHandler = ({ droppedFiles, setDroppedFiles, progress }) => {
@@ -82,10 +83,12 @@ const FileHandler = ({ droppedFiles, setDroppedFiles, progress }) => {
             borderColor="mid"
             borderRadius="medium"
           >
-            <IllustratedMessage>
+            <IllustratedMessage UNSAFE_className="color-white">
               <Upload />
-              <Heading>Drop JPEG or PNG files here</Heading>
-              <Content>Up to 5 files, 5Mb each</Content>
+              <Heading UNSAFE_className="color-white">
+                Drop JPEG or PNG files here
+              </Heading>
+              <Text>Up to 5 files, 5Mb each</Text>
             </IllustratedMessage>
           </View>
         </DragAndDrop>
