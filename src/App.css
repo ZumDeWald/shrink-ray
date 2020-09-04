@@ -1,6 +1,7 @@
 /* -- Custom Properties -- */
 :root {
   --bg-img: url("./subtle-dark-vertical.png");
+  --dz-bg-img: url("./brushed-alum.png");
 }
 
 /* -- Baseline -- */
@@ -72,7 +73,8 @@ header h1 {
   border: 1px solid transparent;
   border-radius: var(--spectrum-alias-border-radius-medium);
   background-color: #000;
-  background: radial-gradient(ellipse at 70% 10%, #e66465, transparent 80%),
+  background: var(--dz-bg-img),
+    radial-gradient(ellipse at 70% 10%, #e66465, transparent 80%),
     radial-gradient(ellipse at -25% 30%, #61a6a6, transparent),
     radial-gradient(ellipse at 10% 120%, #e66465, transparent 80%),
     radial-gradient(ellipse at 90% 100%, #61a6a6, transparent 60%);
