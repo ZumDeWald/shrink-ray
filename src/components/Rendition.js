@@ -31,7 +31,7 @@ const Rendition = ({ data, position, updateSelf, removeSelf, progress }) => {
         data.resize === "off" && !data.reduce
           ? {
               backgroundColor: "#181c24",
-              border: "2px solid var(--spectrum-global-color-red-400)",
+              border: "1px solid var(--spectrum-global-color-red-400)",
             }
           : { backgroundColor: "#181c24" }
       }
