@@ -19,11 +19,12 @@ async function Magick(file, rendition, index) {
     hasReduce = true;
     commandString = `convert inputImage.${rendition.fileType} -quality 60 -colors 256 -depth 8 -strip final_v${index}.${rendition.fileType}`;
   } else {
-    throw new Error(
-      `No changes given for rendition ${index + 1} of ${
-        file.name
-      }, it will be skipped`
-    );
+    return;
+    // throw new Error(
+    //   `No changes given for rendition ${index + 1} of ${
+    //     file.name
+    //   }, it will be skipped`
+    // );
   }
 
   if (!!hasResize && !!hasReduce) {

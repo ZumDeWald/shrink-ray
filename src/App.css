@@ -1,6 +1,7 @@
 /* -- Custom Properties -- */
 :root {
   --bg-img: url("./subtle-dark-vertical.png");
+  --dz-bg-img: url("./brushed-alum.png");
 }
 
 /* -- Baseline -- */
@@ -68,16 +69,26 @@ header h1 {
   min-height: 150px;
 }
 
-.drop-inactive {
-  display: inline-block;
-  position: relative;
-  border: 3px solid transparent;
-  border-radius: 8px;
+.drop-zone {
+  border: 1px solid transparent;
+  border-radius: var(--spectrum-alias-border-radius-medium);
+  background-color: #000;
+  background: var(--dz-bg-img),
+    radial-gradient(ellipse at 70% 10%, #e66465, transparent 80%),
+    radial-gradient(ellipse at -25% 30%, #61a6a6, transparent),
+    radial-gradient(ellipse at 10% 120%, #e66465, transparent 80%),
+    radial-gradient(ellipse at 90% 100%, #61a6a6, transparent 60%);
+  filter: saturate(50%);
+  transition-duration: 600ms;
+  transition-timing-function: ease;
 }
 
-.drop-active {
-  border: 3px solid green;
-  border-radius: 8px;
+.drop-zone.active {
+  filter: none;
+}
+
+.drop-zone svg {
+  fill: #fff;
 }
 
 .file-list-container {
@@ -92,4 +103,8 @@ header h1 {
 
 .rotate-90 {
   transform: rotate(90deg);
+}
+
+.color-white {
+  color: #fff;
 }

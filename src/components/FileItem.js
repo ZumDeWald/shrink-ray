@@ -121,7 +121,6 @@ const FileItem = ({
           })
           .catch(err => {
             setComplete(complete + 1);
-            console.warn(err);
           });
       });
     }
