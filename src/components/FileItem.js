@@ -104,7 +104,12 @@ const FileItem = ({
   //Watch for the Magick to start
   useEffect(() => {
     if (progress === "processing") {
-      renditions.forEach((rendition, index) => {
+      //Filter out renditions that have no changes from original
+      let finalRenditions = renditions.filter(
+        rendition => !(rendition.resize === "off" && !rendition.reduce)
+      );
+
+      finalRenditions.forEach((rendition, index) => {
         Magick(file, rendition, index)
           .then(({ extensionlessFileName, fileType, processedImages }) => {
             setZipFolder(zipFolder =>
@@ -121,6 +126,7 @@ const FileItem = ({
           })
           .catch(err => {
             setComplete(complete + 1);
+            console.error(err);
           });
       });
     }

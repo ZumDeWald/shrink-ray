@@ -27,7 +27,14 @@ const Rendition = ({ data, position, updateSelf, removeSelf, progress }) => {
       justifyContent="space-around"
       width="100%"
       minHeight="size-500"
-      UNSAFE_style={{ backgroundColor: "#181c24" }}
+      UNSAFE_style={
+        data.resize === "off" && !data.reduce
+          ? {
+              backgroundColor: "#181c24",
+              border: "1px solid var(--spectrum-global-color-red-400)",
+            }
+          : { backgroundColor: "#181c24" }
+      }
     >
       <Back
         margin="size-100"
