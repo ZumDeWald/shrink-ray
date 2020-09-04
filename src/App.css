@@ -73,15 +73,20 @@ header h1 {
   border-radius: var(--spectrum-alias-border-radius-medium);
   background-color: #000;
   background: radial-gradient(ellipse at 70% 10%, #e66465, transparent 80%),
-    radial-gradient(ellipse at -25% 60%, #6e971c, transparent),
+    radial-gradient(ellipse at -25% 30%, #61a6a6, transparent),
+    radial-gradient(ellipse at 10% 120%, #e66465, transparent 80%),
     radial-gradient(ellipse at 90% 100%, #61a6a6, transparent 60%);
-  filter: grayscale(70%);
+  filter: saturate(50%);
   transition-duration: 600ms;
   transition-timing-function: ease;
 }
 
 .drop-zone.active {
-  filter: grayscale(0);
+  filter: none;
+}
+
+.drop-zone svg {
+  fill: #fff;
 }
 
 .file-list-container {
@@ -96,4 +101,8 @@ header h1 {
 
 .rotate-90 {
   transform: rotate(90deg);
+}
+
+.color-white {
+  color: #fff;
 }
