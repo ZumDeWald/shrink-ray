@@ -3,13 +3,7 @@ import DragAndDrop from "./DragAndDrop.js";
 import Upload from "@spectrum-icons/illustrations/Upload";
 import NotFound from "@spectrum-icons/illustrations/NotFound";
 import Timeout from "@spectrum-icons/illustrations/Timeout";
-import {
-  View,
-  IllustratedMessage,
-  Heading,
-  Content,
-  Text,
-} from "@adobe/react-spectrum";
+import { View, IllustratedMessage, Heading, Text } from "@adobe/react-spectrum";
 
 const FileHandler = ({ droppedFiles, setDroppedFiles, progress }) => {
   const [formats] = useState(["jpg", "jpeg", "png"]);
@@ -59,7 +53,7 @@ const FileHandler = ({ droppedFiles, setDroppedFiles, progress }) => {
   return (
     <>
       {progress !== "hold" ? (
-        <div style={{ display: "inline-block", position: "relative" }}>
+        <div className="drop-zone">
           <View
             width="75vw"
             paddingY="10px"
@@ -67,10 +61,12 @@ const FileHandler = ({ droppedFiles, setDroppedFiles, progress }) => {
             borderColor="mid"
             borderRadius="medium"
           >
-            <IllustratedMessage>
+            <IllustratedMessage UNSAFE_className="color-white">
               <Timeout />
-              <Heading>Processing Images</Heading>
-              <Content>Choose Reset below to start a new batch</Content>
+              <Heading UNSAFE_className="color-white">
+                Processing Images
+              </Heading>
+              <Text>Choose Reset below to start a new batch</Text>
             </IllustratedMessage>
           </View>
         </div>
@@ -93,7 +89,7 @@ const FileHandler = ({ droppedFiles, setDroppedFiles, progress }) => {
           </View>
         </DragAndDrop>
       ) : (
-        <div style={{ display: "inline-block", position: "relative" }}>
+        <div className="drop-zone">
           <View
             width="75vw"
             paddingY="10px"
@@ -101,10 +97,12 @@ const FileHandler = ({ droppedFiles, setDroppedFiles, progress }) => {
             borderColor="mid"
             borderRadius="medium"
           >
-            <IllustratedMessage>
+            <IllustratedMessage UNSAFE_className="color-white">
               <NotFound />
-              <Heading>Limit of 5 files Reached</Heading>
-              <Content>Refresh page to start a new list</Content>
+              <Heading UNSAFE_className="color-white">
+                Limit of 5 files Reached
+              </Heading>
+              <Text>Refresh page to start a new list</Text>
             </IllustratedMessage>
           </View>
         </div>
