@@ -78,17 +78,19 @@ header h1 {
     radial-gradient(ellipse at -25% 30%, #61a6a6, transparent),
     radial-gradient(ellipse at 10% 120%, #e66465, transparent 80%),
     radial-gradient(ellipse at 90% 100%, #61a6a6, transparent 60%);
-  filter: saturate(50%);
-  transition-duration: 600ms;
-  transition-timing-function: ease;
+  filter: saturate(30%);
+  transition-duration: 400ms;
+  transition-timing-function: ease-out;
 }
 
 .drop-zone.active {
   filter: none;
+  box-shadow: 0 0 12px 3px #61a6a6aa;
 }
 
 .drop-zone svg {
-  fill: #fff;
+  color: #eee;
+  fill: #eee;
 }
 
 .file-list-container {
@@ -106,5 +108,5 @@ header h1 {
 }
 
 .color-white {
-  color: #fff;
+  color: #eee;
 }
