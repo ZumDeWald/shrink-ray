@@ -5,10 +5,8 @@ const ProcessFileName = (fileName, fileType) => {
     switch (typeToCheck) {
       case "image/png":
         return "png";
-      case "image/jpg":
-        return "jpg";
       case "image/jpeg":
-        return "jpeg";
+        return "jpg";
       default:
         return "jpg";
     }
