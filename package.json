@@ -49,7 +49,7 @@
     "@adobe/react-spectrum": "^3.1.0",
     "@spectrum-icons/illustrations": "^3.1.0",
     "@spectrum-icons/workflow": "^3.1.0",
-    "husky": "^4.2.5",
+    "husky": "^4.3.8",
     "js-beautify": "^1.11.0",
     "jszip": "^3.7.0",
     "lint-staged": "^10.2.11",
