@@ -6,7 +6,7 @@ import Timeout from "@spectrum-icons/illustrations/Timeout";
 import { View, IllustratedMessage, Heading, Text } from "@adobe/react-spectrum";
 
 const FileHandler = ({ droppedFiles, setDroppedFiles, progress }) => {
-  const [formats] = useState(["jpg", "jpeg", "png"]);
+  const [formats] = useState(["jpg", "jpeg", "png", "heic"]);
   const [fileCount, setFileCount] = useState(0);
 
   useEffect(() => {
@@ -38,11 +38,7 @@ const FileHandler = ({ droppedFiles, setDroppedFiles, progress }) => {
 
     newFiles.forEach(newFile => {
       if (currentcount < 5) {
-        setDroppedFiles(droppedFiles => {
-          let copy = [...droppedFiles];
-          copy.push(newFile);
-          return copy;
-        });
+        setDroppedFiles(droppedFiles => [...droppedFiles, newFile]);
         currentcount += 1;
       } else {
         return alert("Max of 5 files has been exceeded");
@@ -84,9 +80,18 @@ const FileHandler = ({ droppedFiles, setDroppedFiles, progress }) => {
               <Heading UNSAFE_className="color-white">
                 Drop JPEG or PNG files here
               </Heading>
-              <Text>Up to 5 files, 5Mb each</Text>
+              <Text>Up to 5 files</Text>
             </IllustratedMessage>
           </View>
+          <input
+            id="file-chooser"
+            name="fileChooser"
+            type="file"
+            accept="image/jpg, image/jpeg, image/png"
+            onChange={e => {
+              handleDropProp(e.target.files);
+            }}
+          />
         </DragAndDrop>
       ) : (
         <div className="drop-zone">

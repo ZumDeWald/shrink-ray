@@ -50,6 +50,11 @@ const DragAndDrop = ({ children, handleDropProp }) => {
     }
   };
 
+  const triggerClickOnInput = () => {
+    const input = document.getElementById("file-chooser");
+    input.click();
+  };
+
   return (
     <div
       className={!!data.inDropZone ? "drop-zone active" : "drop-zone"}
@@ -65,6 +70,7 @@ const DragAndDrop = ({ children, handleDropProp }) => {
       onDrop={e => {
         handleDrop(e);
       }}
+      onClick={triggerClickOnInput}
     >
       {children}
     </div>
