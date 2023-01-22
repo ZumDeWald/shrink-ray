@@ -6,7 +6,7 @@ import Timeout from "@spectrum-icons/illustrations/Timeout";
 import { View, IllustratedMessage, Heading, Text } from "@adobe/react-spectrum";
 
 const FileHandler = ({ droppedFiles, setDroppedFiles, progress }) => {
-  const [formats] = useState(["jpg", "jpeg", "png"]);
+  const [formats] = useState(["jpg", "jpeg", "png", "heic"]);
   const [fileCount, setFileCount] = useState(0);
 
   useEffect(() => {
